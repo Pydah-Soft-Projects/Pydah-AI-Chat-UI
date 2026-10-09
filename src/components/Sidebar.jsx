@@ -63,7 +63,7 @@ export default function Sidebar({ isOpen, onClose, onNewChat, messageCount }) {
           </div>
 
           <div className="flex items-center justify-between text-xs text-slate-400 px-1">
-            <span>Pydah AI UI v1.0.1</span>
+            <span>Pydah AI UI v1.0.2.2</span>
             <span className="flex items-center gap-1"><Info className="w-3.5 h-3.5" /> Core Engine</span>
           </div>
         </div>

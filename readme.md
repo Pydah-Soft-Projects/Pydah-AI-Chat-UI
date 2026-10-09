@@ -2,24 +2,23 @@
 
 A modern, responsive, reusable React + Vite + Tailwind CSS frontend interface library for the **Pydah AI** backend platform.
 
-This package is designed as a **shared React component library** intended to be consumed across multiple PydahSoft applications (Student Dashboard, Fee Management, Transport, Hostel, HRMS, Admissions, etc.).
+This package provides **both Full-Page Embedded mode** and **Floating Bottom-Right Widget mode** for seamless integration into any PydahSoft application (Student Dashboard, Fee Management, Transport, Hostel, HRMS, Admissions, etc.).
 
 ---
 
-## 1. Features & Architecture
+## 1. Features & Dual Integration Modes
 
-* **React 18 & Vite 5:** Library mode bundling producing ES Module (`dist/index.es.js`) and UMD (`dist/index.umd.js`) bundles.
-* **Tailwind CSS Styling:** Includes scoped styles (`dist/style.css`) with PydahSoft brand accent green (`#3D6734`) and neutral surfaces (`#F1F1F1`).
-* **Automatic Environment Variable Auto-Detection:** Automatically detects backend URLs from whichever framework the host application uses (`Vite`, `Next.js`, `Create-React-App`, or global `window`).
-* **Zero Code Duplication:** Host applications consume one reusable component and configure only their application identity and `.env` variables.
+* **Floating Widget Mode (`<PydahAIChatWidget />` or `<PydahAIChatUI mode="widget" />`):**
+  Renders a floating bottom-right trigger button. When clicked, opens a popover chat modal floating over existing page content.
+* **Full-Page Embedded Mode (`<PydahAIChatPage />` or `<PydahAIChatUI mode="embedded" />`):**
+  Renders as a full page or container layout.
+* **Automatic Environment Auto-Detection:** Automatically detects backend URLs from `Vite`, `Next.js`, `Create-React-App`, or global `window`.
 
 ---
 
 ## 2. Installing in Host Applications
 
 ### Option A: Installing via Git Repository (Production Recommendation)
-
-In your host application's `package.json` (e.g. Student Dashboard or Fee Management app), add the Git URL dependency:
 
 ```json
 {
@@ -31,73 +30,52 @@ In your host application's `package.json` (e.g. Student Dashboard or Fee Managem
 }
 ```
 
-*For private Git repositories using SSH:*
-```json
-"pydah-ai-chat-ui": "git+ssh://git@github.com/Pydah-Soft-Projects/Pydah-AI-Chat-UI.git"
-```
-
-Then run:
-```bash
-npm install
-```
-
----
-
-### Option B: Installing via Local File Path (Development Recommendation)
-
-For local development across sibling directories:
-
-```json
-{
-  "dependencies": {
-    "pydah-ai-chat-ui": "file:../Pydah-AI-Chat-UI"
-  }
-}
-```
-
 Then run `npm install`.
 
 ---
 
-## 3. Configuring Backend URL in Host Applications (No Hardcoding Required)
+## 3. Usage Modes
 
-Host applications **do not need to hardcode any backend URL in their React code**. 
+### Mode 1: Floating Widget Integration (Recommended for Dashboards)
 
-Simply add your Pydah AI backend URL to the host application's own `.env` file:
+Place `<PydahAIChatWidget />` anywhere in your host app layout. It floats at the bottom-right:
 
-### Vite Host Applications (`.env`):
-```env
-VITE_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
-```
+```jsx
+import React from 'react';
+import { PydahAIChatWidget } from 'pydah-ai-chat-ui';
+import 'pydah-ai-chat-ui/style.css';
 
-### Create-React-App / Webpack Host Applications (`.env`):
-```env
-REACT_APP_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
-```
+export default function AppLayout({ children }) {
+  return (
+    <div>
+      <main>{children}</main>
 
-### Next.js Host Applications (`.env`):
-```env
-NEXT_PUBLIC_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+      {/* Floating Bottom-Right Chat Widget */}
+      <PydahAIChatWidget
+        title="Pydah Student Assistant"
+        welcomeMessage="How can I help you today?"
+        position="bottom-right"
+      />
+    </div>
+  );
+}
 ```
 
 ---
 
-## 4. Usage Examples in Host Applications
+### Mode 2: Full Page / Embedded Container Integration
 
-Import `<PydahAIChatUI />` and `pydah-ai-chat-ui/style.css`:
-
-### Example 1: Student Dashboard Assistant
+Use `<PydahAIChatPage />` or `<PydahAIChatUI mode="embedded" />` to embed directly into a dedicated page:
 
 ```jsx
 import React from 'react';
-import { PydahAIChatUI } from 'pydah-ai-chat-ui';
+import { PydahAIChatPage } from 'pydah-ai-chat-ui';
 import 'pydah-ai-chat-ui/style.css';
 
-export default function StudentAssistantPage() {
-  // Zero hardcoding! Automatically detects VITE_PYDAH_AI_API_URL from host .env
+export default function DedicatedChatPage() {
   return (
     <div className="h-screen w-full">
-      <PydahAIChatUI
+      <PydahAIChatPage
         title="Pydah Student Assistant"
         welcomeMessage="Ask questions about your courses, campus schedule, and studies."
       />
@@ -108,51 +86,21 @@ export default function StudentAssistantPage() {
 
 ---
 
-### Example 2: Fee Assistant Application
-
-```jsx
-import React from 'react';
-import { PydahAIChatUI } from 'pydah-ai-chat-ui';
-import 'pydah-ai-chat-ui/style.css';
-
-export default function FeeAssistantPage() {
-  return (
-    <div className="h-screen w-full">
-      <PydahAIChatUI
-        title="Pydah Fee Assistant"
-        welcomeMessage="Ask questions about fee structure, payment schedules, and receipts."
-      />
-    </div>
-  );
-}
-```
-
----
-
-## 5. Component Props Reference
+## 4. Component Props Reference
 
 | Prop Name | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `title` | `string` | `"Pydah AI Assistant"` | Assistant title displayed in the header. |
+| `mode` | `'embedded' \| 'widget'` | `'embedded'` | Choose between full container or floating widget. |
+| `title` | `string` | `"Pydah AI Assistant"` | Assistant title displayed in header. |
 | `welcomeMessage` | `string` | `"How can I help you today?"` | Welcome heading displayed on empty chat state. |
-| `apiBaseUrl` | `string` | Auto-detected from host `.env` | (Optional override) Manually specifies backend API URL. |
-| `suggestedPrompts` | `Array` | `[...]` | Array of prompt card objects `[{ title, desc, prompt }]`. |
+| `position` | `'bottom-right' \| 'bottom-left'` | `'bottom-right'` | Floating widget button position. |
+| `apiBaseUrl` | `string` | Auto-detected from host `.env` | (Optional) Manually overrides backend URL. |
 
 ---
 
-## 6. Development & Building
+## 5. Development & Building
 
-### Run Standalone Demo Server
 ```bash
-npm run dev
+npm run dev     # Run standalone demo
+npm run build   # Build production library bundles in dist/
 ```
-
-### Build Production Library Bundles
-```bash
-npm run build
-```
-
-Generates production library bundles in `dist/`:
-* `dist/index.es.js`
-* `dist/index.umd.js`
-* `dist/style.css`
