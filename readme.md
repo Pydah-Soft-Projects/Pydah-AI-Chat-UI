@@ -1,41 +1,34 @@
-# Pydah AI Chat UI - Reusable Component & Netlify CDN Web Widget
+# Pydah AI Chat UI - Reusable Component Library & Web Widget
 
 A modern, responsive, reusable AI chat interface for the **Pydah AI** backend platform.
 
-Supports **React Component Imports** and **Instant Netlify CDN Script Embeds** across all frontend frameworks and technologies.
+Supports **React Component Imports** and **Hosted CDN Script Embeds** across all frontend frameworks and web applications.
 
 * **Live Web Preview:** [https://pydah-ai.netlify.app/](https://pydah-ai.netlify.app/)
-* **Live CDN Script:** `https://pydah-ai.netlify.app/index.umd.js`
-* **Live CDN Stylesheet:** `https://pydah-ai.netlify.app/style.css`
+* **Hosted CDN Script:** `https://pydah-ai.netlify.app/index.umd.js`
+* **Hosted CDN Stylesheet:** `https://pydah-ai.netlify.app/style.css`
 
 ---
 
-## 🚀 1. Instant CDN Embed (Zero Host App Updates)
+## 📦 1. Integration in React Applications
 
-When hosted on **Netlify** (`https://pydah-ai.netlify.app/`), host applications across **ANY technology** get instant, automated UI updates without needing to rebuild or reinstall packages!
+### Method A: Package Import (Recommended for React Apps)
 
-### A. HTML / Vanilla JS / PHP / Laravel / ASP.NET / Django
-Add these two lines inside your layout's `<head>` or before `</body>`:
+Add the Git repository dependency to your React application's `package.json`:
 
-```html
-<!-- Pydah AI Floating Chat Widget Styles & Script -->
-<link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
-<script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
-```
-
----
-
-### B. React (Vite / Create-React-App)
-
-#### Option 1: Git Package Dependency
-In `package.json`:
 ```json
-"dependencies": {
-  "pydah-ai-chat-ui": "git+https://github.com/Pydah-Soft-Projects/Pydah-AI-Chat-UI.git"
+{
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "pydah-ai-chat-ui": "git+https://github.com/Pydah-Soft-Projects/Pydah-AI-Chat-UI.git"
+  }
 }
 ```
 
-In your React App:
+Then run `npm install`.
+
+#### Floating Widget Mode (Bottom-Right Trigger Button):
 ```jsx
 import React from 'react';
 import { PydahAIChatWidget } from 'pydah-ai-chat-ui';
@@ -45,7 +38,28 @@ export default function App() {
   return (
     <div>
       {/* Floating Bottom-Right Chat Widget */}
-      <PydahAIChatWidget title="Pydah Student Assistant" />
+      <PydahAIChatWidget 
+        title="Pydah Student Assistant" 
+        welcomeMessage="How can I help you today?" 
+      />
+    </div>
+  );
+}
+```
+
+#### Full-Page / Embedded Container Mode:
+```jsx
+import React from 'react';
+import { PydahAIChatPage } from 'pydah-ai-chat-ui';
+import 'pydah-ai-chat-ui/style.css';
+
+export default function DedicatedChatPage() {
+  return (
+    <div className="h-screen w-full">
+      <PydahAIChatPage 
+        title="Pydah Student Assistant" 
+        welcomeMessage="Ask questions about your courses and schedule." 
+      />
     </div>
   );
 }
@@ -53,7 +67,22 @@ export default function App() {
 
 ---
 
-### C. Next.js (App Router & Pages Router)
+### Method B: Script Tag Embed in React (`public/index.html`)
+
+If you prefer zero-dependency script embedding in React, add these two lines to your `public/index.html`:
+
+```html
+<head>
+  <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
+  <script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
+</head>
+```
+
+---
+
+## 🌐 2. Integration in Other Web Frameworks
+
+### A. Next.js (App Router & Pages Router)
 
 In your `app/layout.jsx` or `pages/_app.jsx`:
 
@@ -69,7 +98,6 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         {children}
-        {/* Instant Netlify CDN Widget Script */}
         <Script 
           src="https://pydah-ai.netlify.app/index.umd.js" 
           strategy="lazyOnload" 
@@ -82,17 +110,23 @@ export default function RootLayout({ children }) {
 
 ---
 
-### D. Vue.js / Nuxt
+### B. HTML / Vanilla JS / PHP / Laravel / ASP.NET / Django
+
+Add to your main layout or HTML page before `</body>`:
+
+```html
+<!-- Pydah AI Floating Chat Widget -->
+<link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
+<script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
+```
+
+---
+
+### C. Vue.js / Nuxt
 
 In `index.html` or `app.vue`:
 
 ```html
-<template>
-  <div id="app">
-    <router-view />
-  </div>
-</template>
-
 <script setup>
 import { onMounted } from 'vue';
 
@@ -118,21 +152,9 @@ onMounted(() => {
 
 ---
 
-### E. Angular
+## ⚙️ 3. Dynamic Environment Variable Configuration
 
-Add CDN script and style references to `angular.json` or `src/index.html`:
-
-```html
-<!-- src/index.html -->
-<link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css">
-<script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
-```
-
----
-
-## ⚙️ 2. Dynamic Environment Variable Configuration
-
-Host applications **do not need to hardcode any backend API URL in code**. 
+Host applications **do not need to hardcode any backend API URL in code**.
 
 Simply add your Pydah AI backend URL to the host application's `.env` file:
 
@@ -149,14 +171,14 @@ NEXT_PUBLIC_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
 
 ---
 
-## 🎨 3. Integration Modes & Component Props
+## 🎨 4. Component Props Reference
 
-| Mode | Usage | Description |
+| Export Name | Usage | Description |
 | :--- | :--- | :--- |
-| **`PydahAIChatWidget`** | `<PydahAIChatWidget mode="widget" />` | Floating bottom-right circular trigger button & popup popover window. |
+| **`PydahAIChatWidget`** | `<PydahAIChatWidget mode="widget" />` | Floating bottom-right circular trigger button & popover chat window. |
 | **`PydahAIChatPage`** | `<PydahAIChatPage mode="embedded" />` | Full-page embedded container layout. |
 
-### Component Props Reference:
+### Component Props:
 
 | Prop Name | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
@@ -168,9 +190,9 @@ NEXT_PUBLIC_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
 
 ---
 
-## 🛠️ 4. Local Development & Netlify Build
+## 🛠️ 5. Development & Building
 
 ```bash
 npm run dev     # Run local standalone demo server (http://localhost:3000)
-npm run build   # Build Netlify web preview & CDN library bundle in dist/
+npm run build   # Build production web preview & library bundle in dist/
 ```
