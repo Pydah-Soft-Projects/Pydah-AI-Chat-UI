@@ -4,7 +4,9 @@ A modern, responsive, reusable AI chat interface for the **Pydah AI** backend pl
 
 Supports **React Component Imports** and **Instant Netlify CDN Script Embeds** across all frontend frameworks and technologies.
 
-Live Hosted Netlify CDN: **https://pydah-ai.netlify.app/**
+* **Live Web Preview:** [https://pydah-ai.netlify.app/](https://pydah-ai.netlify.app/)
+* **Live CDN Script:** `https://pydah-ai.netlify.app/index.umd.js`
+* **Live CDN Stylesheet:** `https://pydah-ai.netlify.app/style.css`
 
 ---
 
@@ -17,8 +19,8 @@ Add these two lines inside your layout's `<head>` or before `</body>`:
 
 ```html
 <!-- Pydah AI Floating Chat Widget Styles & Script -->
-<link rel="stylesheet" href="https://pydah-ai.netlify.app/dist/style.css" />
-<script src="https://pydah-ai.netlify.app/dist/index.umd.js" async></script>
+<link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
+<script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
 ```
 
 ---
@@ -63,13 +65,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="stylesheet" href="https://pydah-ai.netlify.app/dist/style.css" />
+        <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
       </head>
       <body>
         {children}
         {/* Instant Netlify CDN Widget Script */}
         <Script 
-          src="https://pydah-ai.netlify.app/dist/index.umd.js" 
+          src="https://pydah-ai.netlify.app/index.umd.js" 
           strategy="lazyOnload" 
         />
       </body>
@@ -99,14 +101,14 @@ onMounted(() => {
     const link = document.createElement('link');
     link.id = 'pydah-ai-style';
     link.rel = 'stylesheet';
-    link.href = 'https://pydah-ai.netlify.app/dist/style.css';
+    link.href = 'https://pydah-ai.netlify.app/style.css';
     document.head.appendChild(link);
   }
 
   if (!document.getElementById('pydah-ai-script')) {
     const script = document.createElement('script');
     script.id = 'pydah-ai-script';
-    script.src = 'https://pydah-ai.netlify.app/dist/index.umd.js';
+    script.src = 'https://pydah-ai.netlify.app/index.umd.js';
     script.async = true;
     document.body.appendChild(script);
   }
@@ -122,8 +124,8 @@ Add CDN script and style references to `angular.json` or `src/index.html`:
 
 ```html
 <!-- src/index.html -->
-<link rel="stylesheet" href="https://pydah-ai.netlify.app/dist/style.css">
-<script src="https://pydah-ai.netlify.app/dist/index.umd.js" async></script>
+<link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css">
+<script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
 ```
 
 ---
@@ -170,5 +172,5 @@ NEXT_PUBLIC_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
 
 ```bash
 npm run dev     # Run local standalone demo server (http://localhost:3000)
-npm run build   # Build Netlify / Production library bundle in dist/
+npm run build   # Build Netlify web preview & CDN library bundle in dist/
 ```
