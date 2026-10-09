@@ -7,7 +7,7 @@ import MessageList from './components/MessageList';
 import MessageComposer from './components/MessageComposer';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
-export default function App() {
+export default function App({ apiBaseUrl = null, title = null, welcomeMessage = null, suggestedPrompts = null }) {
   const {
     messages,
     isLoading,
@@ -15,13 +15,12 @@ export default function App() {
     sendMessage,
     retryLastMessage,
     clearConversation
-  } = useChat();
+  } = useChat(apiBaseUrl);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen w-screen bg-[#F1F1F1] overflow-hidden">
-      {/* Navigation Sidebar */}
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
@@ -29,15 +28,14 @@ export default function App() {
         messageCount={messages.length}
       />
 
-      {/* Main Chat Interface */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         <ChatHeader
           onNewChat={clearConversation}
           onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
+          title={title}
         />
 
-        {/* Global Error Notification Banner */}
         {error && (
           <div className="bg-rose-50 border-b border-rose-200 px-4 py-3 text-rose-800 text-xs sm:text-sm flex items-center justify-between gap-3 shadow-xs">
             <div className="flex items-center gap-2">
@@ -54,17 +52,15 @@ export default function App() {
           </div>
         )}
 
-        {/* Conversation Area */}
         <main className="flex-1 flex flex-col overflow-hidden relative">
           {messages.length === 0 ? (
             <div className="flex-1 overflow-y-auto flex items-center justify-center">
-              <WelcomeScreen onSelectPrompt={sendMessage} />
+              <WelcomeScreen onSelectPrompt={sendMessage} welcomeMessage={welcomeMessage} suggestions={suggestedPrompts} />
             </div>
           ) : (
             <MessageList messages={messages} isLoading={isLoading} />
           )}
 
-          {/* Bottom Message Input */}
           <MessageComposer onSend={sendMessage} disabled={isLoading} />
         </main>
       </div>

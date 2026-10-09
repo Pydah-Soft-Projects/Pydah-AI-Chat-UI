@@ -10,12 +10,12 @@ This package is designed as a **shared React component library** intended to be 
 
 * **React 18 & Vite 5:** Library mode bundling producing ES Module (`dist/index.es.js`) and UMD (`dist/index.umd.js`) bundles.
 * **Tailwind CSS Styling:** Includes scoped styles (`dist/style.css`) with PydahSoft brand accent green (`#3D6734`) and neutral surfaces (`#F1F1F1`).
-* **Configurable Assistant Identity:** Pass custom titles, welcome headings, and suggested prompts per application without duplicating component code.
-* **Decoupled API Client:** Connects to the Pydah AI backend API (`POST /api/v1/chat`) via configurable `apiBaseUrl` prop.
+* **Automatic Environment Variable Auto-Detection:** Automatically detects backend URLs from whichever framework the host application uses (`Vite`, `Next.js`, `Create-React-App`, or global `window`).
+* **Zero Code Duplication:** Host applications consume one reusable component and configure only their application identity and `.env` variables.
 
 ---
 
-## 2. Installing in Other Applications
+## 2. Installing in Host Applications
 
 ### Option A: Installing via Git Repository (Production Recommendation)
 
@@ -59,9 +59,32 @@ Then run `npm install`.
 
 ---
 
-## 3. How to Use the Component in Host Applications
+## 3. Configuring Backend URL in Host Applications (No Hardcoding Required)
 
-Import `<PydahAIChatUI />` and its CSS file `pydah-ai-chat-ui/style.css` inside your host application:
+Host applications **do not need to hardcode any backend URL in their React code**. 
+
+Simply add your Pydah AI backend URL to the host application's own `.env` file:
+
+### Vite Host Applications (`.env`):
+```env
+VITE_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+```
+
+### Create-React-App / Webpack Host Applications (`.env`):
+```env
+REACT_APP_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+```
+
+### Next.js Host Applications (`.env`):
+```env
+NEXT_PUBLIC_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+```
+
+---
+
+## 4. Usage Examples in Host Applications
+
+Import `<PydahAIChatUI />` and `pydah-ai-chat-ui/style.css`:
 
 ### Example 1: Student Dashboard Assistant
 
@@ -71,24 +94,12 @@ import { PydahAIChatUI } from 'pydah-ai-chat-ui';
 import 'pydah-ai-chat-ui/style.css';
 
 export default function StudentAssistantPage() {
+  // Zero hardcoding! Automatically detects VITE_PYDAH_AI_API_URL from host .env
   return (
     <div className="h-screen w-full">
       <PydahAIChatUI
         title="Pydah Student Assistant"
         welcomeMessage="Ask questions about your courses, campus schedule, and studies."
-        apiBaseUrl="http://localhost:8000"
-        suggestedPrompts={[
-          {
-            title: "Course Topics",
-            desc: "Understand complex subjects simply",
-            prompt: "Explain binary search trees with an easy Python example."
-          },
-          {
-            title: "Exam Revision Tips",
-            desc: "Structured study tips",
-            prompt: "What is an effective 3-day study schedule for computer science exams?"
-          }
-        ]}
       />
     </div>
   );
@@ -110,19 +121,6 @@ export default function FeeAssistantPage() {
       <PydahAIChatUI
         title="Pydah Fee Assistant"
         welcomeMessage="Ask questions about fee structure, payment schedules, and receipts."
-        apiBaseUrl="http://localhost:8000"
-        suggestedPrompts={[
-          {
-            title: "Payment Methods",
-            desc: "Online portals and banking options",
-            prompt: "What online payment methods are accepted for tuition fees?"
-          },
-          {
-            title: "Receipt Verification",
-            desc: "Download fee receipts",
-            prompt: "How can I obtain an official receipt for my semester payment?"
-          }
-        ]}
       />
     </div>
   );
@@ -131,25 +129,25 @@ export default function FeeAssistantPage() {
 
 ---
 
-## 4. Component Props Reference
+## 5. Component Props Reference
 
 | Prop Name | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `title` | `string` | `"Pydah AI Assistant"` | Assistant title displayed in the header. |
 | `welcomeMessage` | `string` | `"How can I help you today?"` | Welcome heading displayed on empty chat state. |
-| `apiBaseUrl` | `string` | `http://localhost:8000` | Central Pydah AI backend endpoint. |
+| `apiBaseUrl` | `string` | Auto-detected from host `.env` | (Optional override) Manually specifies backend API URL. |
 | `suggestedPrompts` | `Array` | `[...]` | Array of prompt card objects `[{ title, desc, prompt }]`. |
 
 ---
 
-## 5. Development & Standalone Demo
+## 6. Development & Building
 
-### Run Dev Demo Server
+### Run Standalone Demo Server
 ```bash
 npm run dev
 ```
 
-### Build Library Artifacts
+### Build Production Library Bundles
 ```bash
 npm run build
 ```

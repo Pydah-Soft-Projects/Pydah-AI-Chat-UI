@@ -1,18 +1,40 @@
-const API_BASE_URL = import.meta.env.VITE_PYDAH_AI_API_URL || 'http://localhost:8000';
-
 /**
- * Send chat message request to the Pydah AI backend API.
- *
- * @param {Object} params
- * @param {string} params.message - The latest user message text.
- * @param {Array} params.history - List of prior message objects [{role, content}].
- * @param {string} [params.conversationId] - Optional conversation ID.
- * @returns {Promise<Object>} Response data containing success, answer, model, conversation_id.
+ * Dynamically resolve the backend API URL from the host application environment.
+ * Checks prop override, window globals, Vite envs, Webpack envs, and Next.js envs.
  */
-export async function sendChatMessage({ message, history = [], conversationId = null }) {
-  const endpoint = `${API_BASE_URL.replace(/\/$/, '')}/api/v1/chat`;
+export function resolveApiUrl(propUrl = null) {
+  if (propUrl) return propUrl;
 
-  // Format message history for backend
+  // 1. Window Global Override
+  if (typeof window !== 'undefined' && window.PYDAH_AI_API_URL) {
+    return window.PYDAH_AI_API_URL;
+  }
+
+  // 2. Vite / Import.meta Environment Variables
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      if (import.meta.env.VITE_PYDAH_AI_API_URL) return import.meta.env.VITE_PYDAH_AI_API_URL;
+      if (import.meta.env.PYDAH_AI_API_URL) return import.meta.env.PYDAH_AI_API_URL;
+    }
+  } catch (e) {}
+
+  // 3. Webpack / Create-React-App / Next.js Process Environment Variables
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      if (process.env.VITE_PYDAH_AI_API_URL) return process.env.VITE_PYDAH_AI_API_URL;
+      if (process.env.REACT_APP_PYDAH_AI_API_URL) return process.env.REACT_APP_PYDAH_AI_API_URL;
+      if (process.env.NEXT_PUBLIC_PYDAH_AI_API_URL) return process.env.NEXT_PUBLIC_PYDAH_AI_API_URL;
+      if (process.env.PYDAH_AI_API_URL) return process.env.PYDAH_AI_API_URL;
+    }
+  } catch (e) {}
+
+  return 'http://localhost:8000';
+}
+
+export async function sendChatMessage({ message, history = [], conversationId = null, apiBaseUrl = null }) {
+  const baseUrl = resolveApiUrl(apiBaseUrl);
+  const endpoint = `${baseUrl.replace(/\/$/, '')}/api/v1/chat`;
+
   const formattedHistory = history
     .filter(msg => msg.role === 'user' || msg.role === 'assistant')
     .map(msg => ({
@@ -27,7 +49,7 @@ export async function sendChatMessage({ message, history = [], conversationId = 
   };
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try {
     const response = await fetch(endpoint, {
@@ -55,7 +77,7 @@ export async function sendChatMessage({ message, history = [], conversationId = 
       throw new Error('Request timed out after 30 seconds. Please check backend status and try again.');
     }
     if (error.message === 'Failed to fetch') {
-      throw new Error('Unable to connect to Pydah AI backend service. Please ensure the backend is running at ' + API_BASE_URL);
+      throw new Error('Unable to connect to Pydah AI backend service at ' + baseUrl + '. Please verify the backend URL.');
     }
     throw error;
   }

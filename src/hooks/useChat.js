@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { sendChatMessage } from '../services/chatApi';
 
-export function useChat() {
+export function useChat(apiBaseUrl = null) {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,17 +20,16 @@ export function useChat() {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    // Update UI state with user message immediately
     setMessages(prev => [...prev, userMsg]);
     setIsLoading(true);
 
     try {
-      // Pass current history prior to this new user message
       const historyToPass = messages;
       const response = await sendChatMessage({
         message: trimmed,
         history: historyToPass,
-        conversationId
+        conversationId,
+        apiBaseUrl
       });
 
       if (response.conversation_id) {
@@ -51,7 +50,7 @@ export function useChat() {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, isLoading, conversationId]);
+  }, [messages, isLoading, conversationId, apiBaseUrl]);
 
   const retryLastMessage = useCallback(() => {
     if (messages.length === 0) return;
