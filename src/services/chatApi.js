@@ -1,10 +1,12 @@
+const LIVE_PRODUCTION_BACKEND_URL = 'https://pydah-ai-api.onrender.com';
+
 /**
  * Dynamically resolve the backend API URL across React component imports AND CDN script embeds.
  * Resolves in order:
  * 1. React component prop override (`apiBaseUrl`)
  * 2. Window global (`window.PYDAH_AI_API_URL`)
  * 3. Host environment variables (`VITE_PYDAH_AI_API_URL`, `REACT_APP_...`, `NEXT_PUBLIC_...`)
- * 4. Fallback default backend URL
+ * 4. Production Live Backend URL Fallback (https://pydah-ai-api.onrender.com)
  */
 export function resolveApiUrl(propUrl = null) {
   if (propUrl) return propUrl;
@@ -32,7 +34,8 @@ export function resolveApiUrl(propUrl = null) {
     }
   } catch (e) {}
 
-  return 'http://localhost:8000';
+  // Default to live production backend
+  return LIVE_PRODUCTION_BACKEND_URL;
 }
 
 export async function sendChatMessage({ message, history = [], conversationId = null, apiBaseUrl = null }) {

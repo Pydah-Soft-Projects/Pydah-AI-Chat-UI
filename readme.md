@@ -7,15 +7,16 @@ Supports **React Component Package Imports** and **Hosted CDN Script Embeds** ac
 * **Live Web Preview:** [https://pydah-ai.netlify.app/](https://pydah-ai.netlify.app/)
 * **Hosted CDN Script:** `https://pydah-ai.netlify.app/index.umd.js`
 * **Hosted CDN Stylesheet:** `https://pydah-ai.netlify.app/style.css`
+* **Live Production AI Backend URL:** `https://pydah-ai-api.onrender.com`
 
 ---
 
 ## ⚙️ 1. How Backend API URLs Are Configured
 
-| Integration Method | Needs `.env` File? | How Host App Configures Backend API URL |
+| Integration Method | Needs `.env` File? | Default Fallback Backend URL |
 | :--- | :---: | :--- |
-| **React Package Import** | **YES** | Host app's `.env` file (`VITE_PYDAH_AI_API_URL=https://...`) |
-| **CDN Script Embed** | **NO** | Set `window.PYDAH_AI_API_URL = "https://..."` in JavaScript |
+| **React Package Import** | **YES** | Host app's `.env` file (`VITE_PYDAH_AI_API_URL=https://pydah-ai-api.onrender.com`) |
+| **CDN Script Embed** | **NO** | Auto-defaults to `https://pydah-ai-api.onrender.com` (or set `window.PYDAH_AI_API_URL`) |
 
 ---
 
@@ -35,16 +36,16 @@ Add the Git repository dependency to your React application's `package.json`:
 
 Then run `npm install`.
 
-### Host Application `.env` Setup (No Hardcoded URLs in React Code):
+### Host Application `.env` Setup (Optional Override):
 ```env
 # Vite Host Apps (.env)
-VITE_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+VITE_PYDAH_AI_API_URL=https://pydah-ai-api.onrender.com
 
 # Create-React-App / Webpack Host Apps (.env)
-REACT_APP_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+REACT_APP_PYDAH_AI_API_URL=https://pydah-ai-api.onrender.com
 
 # Next.js Host Apps (.env)
-NEXT_PUBLIC_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+NEXT_PUBLIC_PYDAH_AI_API_URL=https://pydah-ai-api.onrender.com
 ```
 
 ### Floating Widget Mode (Bottom-Right Trigger Button):
@@ -88,16 +89,13 @@ export default function DedicatedChatPage() {
 
 ## 🌐 3. Integration Method 2: Hosted CDN Script Embeds (NO `.env` File Required)
 
-Using CDN script embeds in React / Next.js / HTML gives your host application **instant live UI updates** without needing `npm install` or `npm update`!
-
-To specify your backend API URL, set `window.PYDAH_AI_API_URL = "https://your-pydah-ai-backend.onrender.com";`.
+CDN script embeds automatically default to the live production backend: `https://pydah-ai-api.onrender.com`. No `.env` setup or React build tools are required!
 
 ### A. HTML / Vanilla JS / PHP / Laravel / ASP.NET / Django
+Add these two lines inside your layout's `<head>` or before `</body>`:
 
 ```html
-<script>
-  window.PYDAH_AI_API_URL = "https://your-pydah-ai-backend.onrender.com";
-</script>
+<!-- Pydah AI Floating Chat Widget Styles & Script -->
 <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
 <script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
 ```
@@ -115,9 +113,6 @@ In your React app's `public/index.html` (or `index.html`):
     <meta charset="UTF-8" />
     <title>Student Dashboard</title>
 
-    <script>
-      window.PYDAH_AI_API_URL = "https://your-pydah-ai-backend.onrender.com";
-    </script>
     <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
     <script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
   </head>
@@ -136,10 +131,7 @@ import React, { useEffect } from 'react';
 
 export default function StudentDashboardLayout({ children }) {
   useEffect(() => {
-    // 1. Set Backend API URL
-    window.PYDAH_AI_API_URL = "https://your-pydah-ai-backend.onrender.com";
-
-    // 2. Inject Stylesheet
+    // 1. Inject Stylesheet
     if (!document.getElementById('pydah-ai-style')) {
       const link = document.createElement('link');
       link.id = 'pydah-ai-style';
@@ -148,7 +140,7 @@ export default function StudentDashboardLayout({ children }) {
       document.head.appendChild(link);
     }
 
-    // 3. Inject Widget Script
+    // 2. Inject Widget Script
     if (!document.getElementById('pydah-ai-script')) {
       const script = document.createElement('script');
       script.id = 'pydah-ai-script';
@@ -176,15 +168,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: 'window.PYDAH_AI_API_URL = "https://your-pydah-ai-backend.onrender.com";',
-          }}
-        />
         <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
       </head>
       <body>
         {children}
+        {/* Instant Netlify CDN Widget Script */}
         <Script 
           src="https://pydah-ai.netlify.app/index.umd.js" 
           strategy="lazyOnload" 
@@ -212,7 +200,7 @@ export default function RootLayout({ children }) {
 | `title` | `string` | `"Pydah AI Assistant"` | Assistant header title. |
 | `welcomeMessage` | `string` | `"How can I help you today?"` | Welcome heading on empty chat screen. |
 | `position` | `'bottom-right' \| 'bottom-left'` | `'bottom-right'` | Floating button screen position. |
-| `apiBaseUrl` | `string` | Auto-detected from `.env` or `window` | (Optional override) Manually specifies backend URL. |
+| `apiBaseUrl` | `string` | `https://pydah-ai-api.onrender.com` | (Optional override) Manually specifies backend URL. |
 
 ---
 
