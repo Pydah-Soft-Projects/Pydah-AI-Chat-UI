@@ -1,18 +1,12 @@
-# Pydah AI Chat UI - Reusable Component Library & Web Widget
+# Pydah AI Chat UI - Reusable React Component Library
 
-A modern, responsive, reusable AI chat interface for the **Pydah AI** backend platform.
+A modern, responsive, reusable AI chat interface component library for the **Pydah AI** backend platform.
 
-Supports **React Component Imports** and **Hosted CDN Script Embeds** across all frontend frameworks and web applications.
-
-* **Live Web Preview:** [https://pydah-ai.netlify.app/](https://pydah-ai.netlify.app/)
-* **Hosted CDN Script:** `https://pydah-ai.netlify.app/index.umd.js`
-* **Hosted CDN Stylesheet:** `https://pydah-ai.netlify.app/style.css`
+Designed as a **shared React component package** to be consumed across multiple PydahSoft applications (Student Dashboard, Fee Management, Transport, Hostel, HRMS, Admissions, etc.).
 
 ---
 
-## 📦 1. Integration in React Applications
-
-### Method A: Package Import (Recommended for React Apps)
+## 📦 1. Installation in Host Applications
 
 Add the Git repository dependency to your React application's `package.json`:
 
@@ -26,9 +20,38 @@ Add the Git repository dependency to your React application's `package.json`:
 }
 ```
 
-Then run `npm install`.
+Then run:
+```bash
+npm install
+```
 
-#### Floating Widget Mode (Bottom-Right Trigger Button):
+---
+
+## ⚙️ 2. Dynamic Environment Variable Configuration
+
+Host applications **do not need to hardcode any backend API URL in React code**.
+
+Simply add your Pydah AI backend URL to the host application's `.env` file:
+
+```env
+# Vite Host Apps (.env)
+VITE_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+
+# Create-React-App / Webpack Host Apps (.env)
+REACT_APP_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+
+# Next.js Host Apps (.env)
+NEXT_PUBLIC_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
+```
+
+---
+
+## 🎨 3. Integration Usage Modes
+
+### Mode A: Floating Widget (Bottom-Right Trigger Button)
+
+Place `<PydahAIChatWidget />` in your layout. It floats at the bottom-right of the page:
+
 ```jsx
 import React from 'react';
 import { PydahAIChatWidget } from 'pydah-ai-chat-ui';
@@ -47,7 +70,12 @@ export default function App() {
 }
 ```
 
-#### Full-Page / Embedded Container Mode:
+---
+
+### Mode B: Full-Page / Embedded Container Layout
+
+Use `<PydahAIChatPage />` to embed directly into a dedicated chat page:
+
 ```jsx
 import React from 'react';
 import { PydahAIChatPage } from 'pydah-ai-chat-ui';
@@ -67,113 +95,9 @@ export default function DedicatedChatPage() {
 
 ---
 
-### Method B: Script Tag Embed in React (`public/index.html`)
+## 📋 4. Component Props Reference
 
-If you prefer zero-dependency script embedding in React, add these two lines to your `public/index.html`:
-
-```html
-<head>
-  <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
-  <script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
-</head>
-```
-
----
-
-## 🌐 2. Integration in Other Web Frameworks
-
-### A. Next.js (App Router & Pages Router)
-
-In your `app/layout.jsx` or `pages/_app.jsx`:
-
-```jsx
-'use client';
-import Script from 'next/script';
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <head>
-        <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
-      </head>
-      <body>
-        {children}
-        <Script 
-          src="https://pydah-ai.netlify.app/index.umd.js" 
-          strategy="lazyOnload" 
-        />
-      </body>
-    </html>
-  );
-}
-```
-
----
-
-### B. HTML / Vanilla JS / PHP / Laravel / ASP.NET / Django
-
-Add to your main layout or HTML page before `</body>`:
-
-```html
-<!-- Pydah AI Floating Chat Widget -->
-<link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
-<script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
-```
-
----
-
-### C. Vue.js / Nuxt
-
-In `index.html` or `app.vue`:
-
-```html
-<script setup>
-import { onMounted } from 'vue';
-
-onMounted(() => {
-  if (!document.getElementById('pydah-ai-style')) {
-    const link = document.createElement('link');
-    link.id = 'pydah-ai-style';
-    link.rel = 'stylesheet';
-    link.href = 'https://pydah-ai.netlify.app/style.css';
-    document.head.appendChild(link);
-  }
-
-  if (!document.getElementById('pydah-ai-script')) {
-    const script = document.createElement('script');
-    script.id = 'pydah-ai-script';
-    script.src = 'https://pydah-ai.netlify.app/index.umd.js';
-    script.async = true;
-    document.body.appendChild(script);
-  }
-});
-</script>
-```
-
----
-
-## ⚙️ 3. Dynamic Environment Variable Configuration
-
-Host applications **do not need to hardcode any backend API URL in code**.
-
-Simply add your Pydah AI backend URL to the host application's `.env` file:
-
-```env
-# Vite Host Apps
-VITE_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
-
-# Create-React-App / Webpack Host Apps
-REACT_APP_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
-
-# Next.js Host Apps
-NEXT_PUBLIC_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
-```
-
----
-
-## 🎨 4. Component Props Reference
-
-| Export Name | Usage | Description |
+| Component Export | Usage | Description |
 | :--- | :--- | :--- |
 | **`PydahAIChatWidget`** | `<PydahAIChatWidget mode="widget" />` | Floating bottom-right circular trigger button & popover chat window. |
 | **`PydahAIChatPage`** | `<PydahAIChatPage mode="embedded" />` | Full-page embedded container layout. |
@@ -190,9 +114,9 @@ NEXT_PUBLIC_PYDAH_AI_API_URL=https://your-pydah-ai-backend.onrender.com
 
 ---
 
-## 🛠️ 5. Development & Building
+## 🛠️ 5. Local Development & Building
 
 ```bash
 npm run dev     # Run local standalone demo server (http://localhost:3000)
-npm run build   # Build production web preview & library bundle in dist/
+npm run build   # Build production library bundle in dist/
 ```
