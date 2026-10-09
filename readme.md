@@ -26,14 +26,14 @@ In your host application's `package.json` (e.g. Student Dashboard or Fee Managem
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "pydah-ai-chat-ui": "git+https://github.com/PydahSoft/pydah-ai-chat-ui.git"
+    "pydah-ai-chat-ui": "git+https://github.com/Pydah-Soft-Projects/Pydah-AI-Chat-UI.git"
   }
 }
 ```
 
 *For private Git repositories using SSH:*
 ```json
-"pydah-ai-chat-ui": "git+ssh://git@github.com/PydahSoft/pydah-ai-chat-ui.git"
+"pydah-ai-chat-ui": "git+ssh://git@github.com/Pydah-Soft-Projects/Pydah-AI-Chat-UI.git"
 ```
 
 Then run:

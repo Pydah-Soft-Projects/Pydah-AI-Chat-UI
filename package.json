@@ -42,10 +42,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PydahSoft/pydah-ai-chat-ui.git"
+    "url": "git+https://github.com/Pydah-Soft-Projects/Pydah-AI-Chat-UI.git"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/Pydah-Soft-Projects/Pydah-AI-Chat-UI/issues"
+  },
+  "homepage": "https://github.com/Pydah-Soft-Projects/Pydah-AI-Chat-UI#readme"
 }
