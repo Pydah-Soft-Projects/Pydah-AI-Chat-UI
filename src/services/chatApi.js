@@ -1,11 +1,15 @@
 /**
- * Dynamically resolve the backend API URL from the host application environment.
- * Checks prop override, window globals, Vite envs, Webpack envs, and Next.js envs.
+ * Dynamically resolve the backend API URL across React component imports AND CDN script embeds.
+ * Resolves in order:
+ * 1. React component prop override (`apiBaseUrl`)
+ * 2. Window global (`window.PYDAH_AI_API_URL`)
+ * 3. Host environment variables (`VITE_PYDAH_AI_API_URL`, `REACT_APP_...`, `NEXT_PUBLIC_...`)
+ * 4. Fallback default backend URL
  */
 export function resolveApiUrl(propUrl = null) {
   if (propUrl) return propUrl;
 
-  // 1. Window Global Override
+  // 1. Check Window Global Override
   if (typeof window !== 'undefined' && window.PYDAH_AI_API_URL) {
     return window.PYDAH_AI_API_URL;
   }
