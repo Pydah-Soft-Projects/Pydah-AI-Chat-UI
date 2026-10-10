@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 import { resolveApiUrl } from './services/chatApi';
@@ -6,14 +7,6 @@ import { resolveApiUrl } from './services/chatApi';
 /**
  * Main Flexible Pydah AI Chat Component.
  * Supports both embedded page layout and floating widget mode via `mode` prop.
- *
- * @param {Object} props
- * @param {'embedded' | 'widget'} [props.mode='embedded'] - Display mode.
- * @param {string} [props.apiBaseUrl] - Dynamic backend API URL.
- * @param {string} [props.title] - Custom assistant title.
- * @param {string} [props.welcomeMessage] - Custom welcome heading.
- * @param {Array} [props.suggestedPrompts] - Array of prompt cards [{title, desc, prompt}].
- * @param {'bottom-right' | 'bottom-left'} [props.position='bottom-right'] - Position for widget mode.
  */
 export function PydahAIChatUI(props) {
   const resolvedApiUrl = resolveApiUrl(props.apiBaseUrl || props.apiUrl);
@@ -22,7 +15,6 @@ export function PydahAIChatUI(props) {
 
 /**
  * Floating Widget Shortcut Component.
- * Renders a bottom-right floating trigger button and popup chat modal window.
  */
 export function PydahAIChatWidget(props) {
   return <PydahAIChatUI {...props} mode="widget" />;
@@ -33,6 +25,46 @@ export function PydahAIChatWidget(props) {
  */
 export function PydahAIChatPage(props) {
   return <PydahAIChatUI {...props} mode="embedded" />;
+}
+
+// Global Window Mount Logic for CDN Script Embeds (<script src=".../index.umd.js"></script>)
+if (typeof window !== 'undefined') {
+  window.PydahAIChatUI = PydahAIChatUI;
+  window.PydahAIChatWidget = PydahAIChatWidget;
+  window.PydahAIChatPage = PydahAIChatPage;
+
+  const initCDNWidget = () => {
+    // Avoid double mounting
+    if (document.getElementById('pydah-ai-chat-root')) return;
+
+    const mountContainer = document.createElement('div');
+    mountContainer.id = 'pydah-ai-chat-root';
+    document.body.appendChild(mountContainer);
+
+    const root = ReactDOM.createRoot(mountContainer);
+
+    const renderWidget = () => {
+      const apiBaseUrl = window.PYDAH_AI_API_URL || null;
+      const assistantId = window.PYDAH_AI_ASSISTANT_ID || 'general-assistant';
+      const authToken = window.PYDAH_AI_AUTH_TOKEN || null;
+
+      root.render(
+        <PydahAIChatWidget
+          apiBaseUrl={apiBaseUrl}
+          assistantId={assistantId}
+          authToken={authToken}
+        />
+      );
+    };
+
+    renderWidget();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCDNWidget);
+  } else {
+    initCDNWidget();
+  }
 }
 
 export default PydahAIChatUI;

@@ -85,7 +85,7 @@ export default function App({
 
   // Embedded Full-Page Mode Render
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#F1F1F1] overflow-hidden">
+    <div className="flex flex-col h-full w-full bg-[#F1F1F1] overflow-hidden">
       {/* Dev Mode Switcher Bar (Only visible during local npm run dev) */}
       {import.meta.env.DEV && (
         <div className="h-10 bg-slate-900 text-white px-4 flex items-center justify-between shrink-0 text-xs z-30 shadow-md">

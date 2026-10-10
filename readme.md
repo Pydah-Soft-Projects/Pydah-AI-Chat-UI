@@ -123,90 +123,59 @@ Add these lines inside your layout's `<head>` or before `</body>`:
 
 ---
 
-### B. React Apps via `public/index.html` (Vite / Create-React-App)
+### B. React Apps via Dynamic Loader Component (`useEffect`)
 
-In your React app's `public/index.html` (or `index.html`):
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Student Dashboard</title>
-
-    <script>
-      window.PYDAH_AI_ASSISTANT_ID = "student-assistant";
-    </script>
-    <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
-    <script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
-```
-
----
-
-### C. React Apps via Dynamic Loader Component (`useEffect`)
+To guarantee zero React version mismatch errors when dynamically injecting UMD scripts inside host React applications:
 
 ```jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 
-export default function StudentDashboardLayout({ children }) {
+export default function PydahAiChat({ mode = 'widget', assistantId = 'student-assistant', apiBaseUrl = 'http://localhost:8000', authToken }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    // Set Assistant ID Persona Configuration
-    window.PYDAH_AI_ASSISTANT_ID = "student-assistant";
+    if (typeof window !== 'undefined') {
+      // Expose React & ReactDOM globally BEFORE UMD bundle executes
+      window.React = React;
+      window.ReactDOM = ReactDOM;
 
-    // 1. Inject Stylesheet
-    if (!document.getElementById('pydah-ai-style')) {
-      const link = document.createElement('link');
-      link.id = 'pydah-ai-style';
-      link.rel = 'stylesheet';
-      link.href = 'https://pydah-ai.netlify.app/style.css';
-      document.head.appendChild(link);
+      window.PYDAH_AI_API_URL = apiBaseUrl;
+      window.PYDAH_AI_ASSISTANT_ID = assistantId;
+      if (authToken) window.PYDAH_AI_AUTH_TOKEN = authToken;
+
+      // Inject Stylesheet
+      if (!document.getElementById('pydah-ai-style')) {
+        const link = document.createElement('link');
+        link.id = 'pydah-ai-style';
+        link.rel = 'stylesheet';
+        link.href = 'https://pydah-ai.netlify.app/style.css';
+        document.head.appendChild(link);
+      }
+
+      // Inject Script
+      if (!document.getElementById('pydah-ai-script')) {
+        const script = document.createElement('script');
+        script.id = 'pydah-ai-script';
+        script.src = 'https://pydah-ai.netlify.app/index.umd.js';
+        script.async = true;
+        script.onload = () => setIsLoaded(true);
+        document.body.appendChild(script);
+      } else if (window.PydahAIChatUI) {
+        setIsLoaded(true);
+      }
     }
+  }, [apiBaseUrl, assistantId, authToken]);
 
-    // 2. Inject Widget Script
-    if (!document.getElementById('pydah-ai-script')) {
-      const script = document.createElement('script');
-      script.id = 'pydah-ai-script';
-      script.src = 'https://pydah-ai.netlify.app/index.umd.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
+  if (!isLoaded || typeof window === 'undefined' || !window.PydahAIChatUI) {
+    return null;
+  }
 
-  return <div>{children}</div>;
-}
-```
+  const Component = mode === 'embedded' 
+    ? (window.PydahAIChatUI.PydahAIChatPage || window.PydahAIChatUI.default)
+    : (window.PydahAIChatUI.PydahAIChatWidget || window.PydahAIChatUI.default);
 
----
-
-### D. Next.js React Apps (`<Script />` Component)
-
-In your `app/layout.jsx` or `pages/_app.jsx`:
-
-```jsx
-'use client';
-import Script from 'next/script';
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <head>
-        <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
-      </head>
-      <body>
-        {children}
-        {/* Instant Netlify CDN Widget Script */}
-        <Script 
-          src="https://pydah-ai.netlify.app/index.umd.js" 
-          strategy="lazyOnload" 
-        />
-      </body>
-    </html>
-  );
+  return <Component mode={mode} assistantId={assistantId} authToken={authToken} apiBaseUrl={apiBaseUrl} />;
 }
 ```
 
@@ -239,3 +208,22 @@ export default function RootLayout({ children }) {
 npm run dev     # Run local standalone demo server (http://localhost:3000)
 npm run build   # Build production web preview & library bundle in dist/
 ```
+
+---
+
+## 🔗 6. Handling Links & External URLs Correctly
+
+When integrating **Pydah AI Chat UI** into your applications or managing links within AI responses, follow these best practices:
+
+### A. Dynamic Backend URLs (No Hardcoded Live URLs)
+- Avoid hardcoding backend endpoints directly in source code.
+- Always configure the backend API URL dynamically:
+  - **React Package Import:** Use environment variables (`VITE_PYDAH_AI_API_URL` or `NEXT_PUBLIC_PYDAH_AI_API_URL`) or pass `apiBaseUrl` prop.
+  - **CDN Script Embed:** Set `window.PYDAH_AI_API_URL = "https://your-backend.com"`.
+
+### B. External Links in AI Responses & Markdown
+- Any external links returned in assistant messages or rendered in markdown must use:
+  ```html
+  <a href="https://example.com" target="_blank" rel="noopener noreferrer">Link Text</a>
+  ```
+- This ensures security against tabnabbing attacks (`rel="noopener noreferrer"`) and opens links in a new browser tab.
