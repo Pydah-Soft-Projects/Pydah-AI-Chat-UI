@@ -3,7 +3,11 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      jsxRuntime: 'classic' // Compiles JSX to React.createElement to prevent 'e.jsx is not a function' errors in UMD
+    })
+  ],
   build: {
     outDir: 'dist',
     emptyOutDir: false,
@@ -14,15 +18,11 @@ export default defineConfig({
       formats: ['es', 'umd']
     },
     rollupOptions: {
-      // Externalizing react & react-dom ensures the UMD bundle uses the host application's
-      // single shared React instance (window.React / window.ReactDOM), completely eliminating
-      // the "Invalid hook call: multiple copies of React in the same app" runtime crash.
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: ['react', 'react-dom'],
       output: {
         globals: {
           react: 'React',
-          'react-dom': 'ReactDOM',
-          'react/jsx-runtime': 'React'
+          'react-dom': 'ReactDOM'
         },
         exports: 'named'
       }

@@ -4,9 +4,9 @@ A modern, responsive, reusable AI chat interface for the **Pydah AI** backend pl
 
 Supports **React Component Package Imports** and **Hosted CDN Script Embeds** across all frontend frameworks and web applications.
 
-* **Live Web Preview:** [https://pydah-ai.netlify.app/](https://pydah-ai.netlify.app/)
-* **Hosted CDN Script:** `https://pydah-ai.netlify.app/index.umd.js`
-* **Hosted CDN Stylesheet:** `https://pydah-ai.netlify.app/style.css`
+* **Live Web Preview:** [https://pydah-ai-chat-ui.vercel.app/](https://pydah-ai-chat-ui.vercel.app/)
+* **Hosted CDN Script:** `https://pydah-ai-chat-ui.vercel.app/index.umd.js`
+* **Hosted CDN Stylesheet:** `https://pydah-ai-chat-ui.vercel.app/style.css`
 * **Live Production AI Backend URL:** `https://pydah-ai-api.onrender.com`
 
 ---
@@ -117,8 +117,8 @@ Add these lines inside your layout's `<head>` or before `</body>`:
 </script>
 
 <!-- Pydah AI Floating Chat Widget Styles & Script -->
-<link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
-<script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
+<link rel="stylesheet" href="https://pydah-ai-chat-ui.vercel.app/style.css" />
+<script src="https://pydah-ai-chat-ui.vercel.app/index.umd.js" async></script>
 ```
 
 ---
@@ -163,7 +163,7 @@ export default function PydahAiChat({
         const link = document.createElement('link');
         link.id = 'pydah-ai-style';
         link.rel = 'stylesheet';
-        link.href = 'https://pydah-ai.netlify.app/style.css';
+        link.href = 'https://pydah-ai-chat-ui.vercel.app/style.css';
         document.head.appendChild(link);
       }
 
@@ -171,7 +171,7 @@ export default function PydahAiChat({
       if (!document.getElementById('pydah-ai-script')) {
         const script = document.createElement('script');
         script.id = 'pydah-ai-script';
-        script.src = 'https://pydah-ai.netlify.app/index.umd.js';
+        script.src = 'https://pydah-ai-chat-ui.vercel.app/index.umd.js';
         script.async = true;
         script.onload = () => setIsLoaded(true);
         document.body.appendChild(script);
