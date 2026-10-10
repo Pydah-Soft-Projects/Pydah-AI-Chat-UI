@@ -37,8 +37,8 @@ export default function FloatingWidget({
   const handleBtnMouseDown = (e) => {
     setIsBtnDragging(true);
     dragDistanceRef.current = 0;
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-    const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+    const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+    const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
     btnDragStartRef.current = {
       mouseX: clientX,
       mouseY: clientY,
@@ -48,43 +48,55 @@ export default function FloatingWidget({
   };
 
   useEffect(() => {
+    let animId = null;
+
     const handleMove = (e) => {
-      const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-      const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+      const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
 
       if (isBtnDragging) {
         const deltaX = clientX - btnDragStartRef.current.mouseX;
         const deltaY = clientY - btnDragStartRef.current.mouseY;
         dragDistanceRef.current = Math.hypot(deltaX, deltaY);
-        setBtnOffset({
-          x: btnDragStartRef.current.initialX + deltaX,
-          y: btnDragStartRef.current.initialY + deltaY
+
+        if (animId) cancelAnimationFrame(animId);
+        animId = requestAnimationFrame(() => {
+          setBtnOffset({
+            x: btnDragStartRef.current.initialX + deltaX,
+            y: btnDragStartRef.current.initialY + deltaY
+          });
         });
       }
 
       if (isModalDragging) {
         const deltaX = clientX - modalDragStartRef.current.mouseX;
         const deltaY = clientY - modalDragStartRef.current.mouseY;
-        setModalOffset({
-          x: modalDragStartRef.current.initialX + deltaX,
-          y: modalDragStartRef.current.initialY + deltaY
+
+        if (animId) cancelAnimationFrame(animId);
+        animId = requestAnimationFrame(() => {
+          setModalOffset({
+            x: modalDragStartRef.current.initialX + deltaX,
+            y: modalDragStartRef.current.initialY + deltaY
+          });
         });
       }
     };
 
     const handleEnd = () => {
+      if (animId) cancelAnimationFrame(animId);
       if (isBtnDragging) setIsBtnDragging(false);
       if (isModalDragging) setIsModalDragging(false);
     };
 
     if (isBtnDragging || isModalDragging) {
-      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('mousemove', handleMove, { passive: true });
       window.addEventListener('mouseup', handleEnd);
-      window.addEventListener('touchmove', handleMove);
+      window.addEventListener('touchmove', handleMove, { passive: true });
       window.addEventListener('touchend', handleEnd);
     }
 
     return () => {
+      if (animId) cancelAnimationFrame(animId);
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseup', handleEnd);
       window.removeEventListener('touchmove', handleMove);
@@ -101,8 +113,8 @@ export default function FloatingWidget({
   const handleModalHeaderMouseDown = (e) => {
     if (e.target.closest('button')) return;
     setIsModalDragging(true);
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-    const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+    const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+    const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
     modalDragStartRef.current = {
       mouseX: clientX,
       mouseY: clientY,
@@ -122,10 +134,11 @@ export default function FloatingWidget({
         onTouchStart={handleBtnMouseDown}
         onClick={handleBtnClick}
         style={{
-          transform: `translate(${btnOffset.x}px, ${btnOffset.y}px)`
+          transform: `translate3d(${btnOffset.x}px, ${btnOffset.y}px, 0)`,
+          willChange: 'transform'
         }}
-        className={`fixed ${posClasses} z-50 p-3 sm:p-4 rounded-full bg-[#E0F2FE] hover:bg-[#BAE6FD] text-slate-700 border border-sky-200/80 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-150 flex items-center justify-center group ring-4 ring-sky-300/40 ${
-          isBtnDragging ? 'cursor-grabbing scale-105' : 'cursor-grab'
+        className={`fixed ${posClasses} z-50 p-3 sm:p-4 rounded-full bg-[#E0F2FE] hover:bg-[#BAE6FD] text-slate-700 border border-sky-200/80 shadow-lg hover:shadow-xl flex items-center justify-center group ring-4 ring-sky-300/40 select-none ${
+          isBtnDragging ? 'transition-none cursor-grabbing scale-105' : 'transition-all duration-150 cursor-grab hover:scale-105 active:scale-95'
         }`}
         aria-label="Open Pydah AI Assistant"
         title="Click to open or drag to move button"
@@ -148,9 +161,12 @@ export default function FloatingWidget({
       {isOpen && (
         <div 
           style={{
-            transform: `translate(${btnOffset.x + modalOffset.x}px, ${btnOffset.y + modalOffset.y}px)`
+            transform: `translate3d(${btnOffset.x + modalOffset.x}px, ${btnOffset.y + modalOffset.y}px, 0)`,
+            willChange: 'transform'
           }}
-          className={`fixed ${defaultWindowPos} z-50 w-[calc(100vw-1rem)] xs:w-[calc(100vw-2rem)] sm:w-[410px] md:w-[430px] h-[520px] sm:h-[580px] max-h-[85vh] bg-[#F1F1F1] rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200`}
+          className={`fixed ${defaultWindowPos} z-50 w-[calc(100vw-1rem)] xs:w-[calc(100vw-2rem)] sm:w-[410px] md:w-[430px] h-[520px] sm:h-[580px] max-h-[85vh] bg-[#F1F1F1] rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden ${
+            isModalDragging ? 'transition-none' : 'animate-in fade-in slide-in-from-bottom-5 duration-200'
+          }`}
         >
           {/* Header */}
           <div 
