@@ -11,6 +11,8 @@ import { AlertCircle, RefreshCw, Layout, MessageSquarePlus } from 'lucide-react'
 export default function App({
   mode: initialMode = "embedded",
   apiBaseUrl = null,
+  assistantId = "general-assistant",
+  authToken = null,
   title = null,
   welcomeMessage = null,
   suggestedPrompts = null,
@@ -25,7 +27,7 @@ export default function App({
     sendMessage,
     retryLastMessage,
     clearConversation
-  } = useChat(apiBaseUrl);
+  } = useChat({ apiBaseUrl, assistantId, authToken });
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -70,6 +72,8 @@ export default function App({
 
         <FloatingWidget
           apiBaseUrl={apiBaseUrl}
+          assistantId={assistantId}
+          authToken={authToken}
           title={title || "Pydah AI Assistant"}
           welcomeMessage={welcomeMessage}
           suggestedPrompts={suggestedPrompts}

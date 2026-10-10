@@ -11,12 +11,18 @@ Supports **React Component Package Imports** and **Hosted CDN Script Embeds** ac
 
 ---
 
-## ⚙️ 1. How Backend API URLs Are Configured
+## ⚙️ 1. How Backend API URLs & Assistant Personas Are Configured
 
-| Integration Method | Needs `.env` File? | Default Fallback Backend URL |
-| :--- | :---: | :--- |
-| **React Package Import** | **YES** | Host app's `.env` file (`VITE_PYDAH_AI_API_URL=https://pydah-ai-api.onrender.com`) |
-| **CDN Script Embed** | **NO** | Auto-defaults to `https://pydah-ai-api.onrender.com` (or set `window.PYDAH_AI_API_URL`) |
+| Integration Method | Needs `.env` File? | Default Fallback Backend URL | Assistant ID Persona Config |
+| :--- | :---: | :--- | :--- |
+| **React Package Import** | **YES** | Host app's `.env` file (`VITE_PYDAH_AI_API_URL=...`) | Pass `assistantId="student-assistant"` prop |
+| **CDN Script Embed** | **NO** | Auto-defaults to backend URL | Set `window.PYDAH_AI_ASSISTANT_ID = "student-assistant"` |
+
+### Available Assistant Personas (`assistantId`):
+- `student-assistant`: Handles student profile details, attendance records, and academic grade reports.
+- `fee-assistant`: Handles fee summaries, tuition breakdown, and itemized pending dues.
+- `transport-assistant`: Handles bus allocation, driver contacts, and route schedules.
+- `general-assistant`: General institution guidance and default responses.
 
 ---
 
@@ -55,12 +61,16 @@ import { PydahAIChatWidget } from 'pydah-ai-chat-ui';
 import 'pydah-ai-chat-ui/style.css';
 
 export default function App() {
+  const userToken = localStorage.getItem("user_token");
+
   return (
     <div>
-      {/* Floating Bottom-Right Chat Widget */}
+      {/* Floating Bottom-Right Chat Widget with Student Assistant */}
       <PydahAIChatWidget 
+        assistantId="student-assistant"
+        authToken={userToken}
         title="Pydah Student Assistant" 
-        welcomeMessage="How can I help you today?" 
+        welcomeMessage="How can I help you today with your profile, attendance, or grades?" 
       />
     </div>
   );
@@ -74,11 +84,15 @@ import { PydahAIChatPage } from 'pydah-ai-chat-ui';
 import 'pydah-ai-chat-ui/style.css';
 
 export default function DedicatedChatPage() {
+  const userToken = localStorage.getItem("user_token");
+
   return (
     <div className="h-screen w-full">
       <PydahAIChatPage 
+        assistantId="student-assistant"
+        authToken={userToken}
         title="Pydah Student Assistant" 
-        welcomeMessage="Ask questions about your courses and schedule." 
+        welcomeMessage="Ask questions about your courses, attendance, and schedule." 
       />
     </div>
   );
@@ -92,9 +106,16 @@ export default function DedicatedChatPage() {
 CDN script embeds automatically default to the live production backend: `https://pydah-ai-api.onrender.com`. No `.env` setup or React build tools are required!
 
 ### A. HTML / Vanilla JS / PHP / Laravel / ASP.NET / Django
-Add these two lines inside your layout's `<head>` or before `</body>`:
+Add these lines inside your layout's `<head>` or before `</body>`:
 
 ```html
+<!-- Optional Global Configuration Override -->
+<script>
+  window.PYDAH_AI_API_URL = "https://pydah-ai-api.onrender.com";
+  window.PYDAH_AI_ASSISTANT_ID = "student-assistant"; // Persona identifier
+  window.PYDAH_AI_AUTH_TOKEN = "YOUR_USER_BEARER_TOKEN";
+</script>
+
 <!-- Pydah AI Floating Chat Widget Styles & Script -->
 <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
 <script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
@@ -113,6 +134,9 @@ In your React app's `public/index.html` (or `index.html`):
     <meta charset="UTF-8" />
     <title>Student Dashboard</title>
 
+    <script>
+      window.PYDAH_AI_ASSISTANT_ID = "student-assistant";
+    </script>
     <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
     <script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
   </head>
@@ -131,6 +155,9 @@ import React, { useEffect } from 'react';
 
 export default function StudentDashboardLayout({ children }) {
   useEffect(() => {
+    // Set Assistant ID Persona Configuration
+    window.PYDAH_AI_ASSISTANT_ID = "student-assistant";
+
     // 1. Inject Stylesheet
     if (!document.getElementById('pydah-ai-style')) {
       const link = document.createElement('link');
@@ -197,7 +224,9 @@ export default function RootLayout({ children }) {
 | Prop Name | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `mode` | `'embedded' \| 'widget'` | `'embedded'` | Display style (full page vs floating widget). |
-| `title` | `string` | `"Pydah AI Assistant"` | Assistant header title. |
+| `assistantId` | `string` | `"student-assistant"` | Assistant persona (`"student-assistant"`, `"fee-assistant"`, `"transport-assistant"`). |
+| `authToken` | `string` | `null` | User's Bearer authentication token passed to tool calls. |
+| `title` | `string` | `"Pydah Student Assistant"` | Assistant header title. |
 | `welcomeMessage` | `string` | `"How can I help you today?"` | Welcome heading on empty chat screen. |
 | `position` | `'bottom-right' \| 'bottom-left'` | `'bottom-right'` | Floating button screen position. |
 | `apiBaseUrl` | `string` | `https://pydah-ai-api.onrender.com` | (Optional override) Manually specifies backend URL. |

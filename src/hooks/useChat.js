@@ -1,7 +1,11 @@
 import { useState, useCallback } from 'react';
 import { sendChatMessage } from '../services/chatApi';
 
-export function useChat(apiBaseUrl = null) {
+export function useChat(options = {}) {
+  const apiBaseUrl = typeof options === 'string' ? options : options?.apiBaseUrl || null;
+  const assistantId = typeof options === 'object' ? options?.assistantId || 'general-assistant' : 'general-assistant';
+  const authToken = typeof options === 'object' ? options?.authToken || null : null;
+
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,6 +33,8 @@ export function useChat(apiBaseUrl = null) {
         message: trimmed,
         history: historyToPass,
         conversationId,
+        assistantId,
+        authToken,
         apiBaseUrl
       });
 
@@ -41,6 +47,8 @@ export function useChat(apiBaseUrl = null) {
         role: 'assistant',
         content: response.answer,
         model: response.model,
+        assistantId: response.assistant_id,
+        executedTools: response.executed_tools || [],
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
@@ -50,7 +58,7 @@ export function useChat(apiBaseUrl = null) {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, isLoading, conversationId, apiBaseUrl]);
+  }, [messages, isLoading, conversationId, assistantId, authToken, apiBaseUrl]);
 
   const retryLastMessage = useCallback(() => {
     if (messages.length === 0) return;

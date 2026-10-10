@@ -35,7 +35,14 @@ export function resolveApiUrl(propUrl = null) {
   return 'http://localhost:8000';
 }
 
-export async function sendChatMessage({ message, history = [], conversationId = null, apiBaseUrl = null }) {
+export async function sendChatMessage({
+  message,
+  history = [],
+  conversationId = null,
+  assistantId = 'general-assistant',
+  authToken = null,
+  apiBaseUrl = null
+}) {
   const baseUrl = resolveApiUrl(apiBaseUrl);
   const endpoint = `${baseUrl.replace(/\/$/, '')}/api/v1/chat`;
 
@@ -48,9 +55,19 @@ export async function sendChatMessage({ message, history = [], conversationId = 
 
   const payload = {
     message,
+    assistant_id: assistantId,
     conversation_id: conversationId,
-    history: formattedHistory
+    history: formattedHistory,
+    user_token: authToken
   };
+
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  if (authToken) {
+    headers['Authorization'] = `Bearer ${authToken}`;
+  }
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 30000);
@@ -58,9 +75,7 @@ export async function sendChatMessage({ message, history = [], conversationId = 
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(payload),
       signal: controller.signal
     });

@@ -7,6 +7,8 @@ import MessageComposer from './MessageComposer';
 
 export default function FloatingWidget({
   apiBaseUrl = null,
+  assistantId = "general-assistant",
+  authToken = null,
   title = "Pydah AI Assistant",
   welcomeMessage = null,
   suggestedPrompts = null,
@@ -30,7 +32,7 @@ export default function FloatingWidget({
     sendMessage,
     retryLastMessage,
     clearConversation
-  } = useChat(apiBaseUrl);
+  } = useChat({ apiBaseUrl, assistantId, authToken });
 
   const handleBtnMouseDown = (e) => {
     setIsBtnDragging(true);
