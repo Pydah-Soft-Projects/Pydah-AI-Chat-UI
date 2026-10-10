@@ -14,13 +14,9 @@ export default defineConfig({
       formats: ['es', 'umd']
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM'
-        }
-      }
+      // Bundling React & ReactDOM into the standalone UMD CDN script prevents
+      // '__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED' and 'ReactDOM is undefined'
+      // runtime errors when embedded via <script src=".../index.umd.js"></script> across any host app.
     }
   }
 });
