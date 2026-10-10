@@ -14,9 +14,18 @@ export default defineConfig({
       formats: ['es', 'umd']
     },
     rollupOptions: {
-      // Bundling React & ReactDOM into the standalone UMD CDN script prevents
-      // '__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED' and 'ReactDOM is undefined'
-      // runtime errors when embedded via <script src=".../index.umd.js"></script> across any host app.
+      // Externalizing react & react-dom ensures the UMD bundle uses the host application's
+      // single shared React instance (window.React / window.ReactDOM), completely eliminating
+      // the "Invalid hook call: multiple copies of React in the same app" runtime crash.
+      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          'react/jsx-runtime': 'React'
+        },
+        exports: 'named'
+      }
     }
   }
 });
