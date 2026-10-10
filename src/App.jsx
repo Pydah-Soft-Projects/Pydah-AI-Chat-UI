@@ -16,7 +16,8 @@ export default function App({
   title = null,
   welcomeMessage = null,
   suggestedPrompts = null,
-  position = "bottom-right"
+  position = "bottom-right",
+  avatarUrl = null
 }) {
   const [activeMode, setActiveMode] = useState(initialMode);
 
@@ -78,6 +79,7 @@ export default function App({
           welcomeMessage={welcomeMessage}
           suggestedPrompts={suggestedPrompts}
           position={position}
+          avatarUrl={avatarUrl}
         />
       </>
     );
@@ -127,6 +129,7 @@ export default function App({
           onClose={() => setIsSidebarOpen(false)}
           onNewChat={clearConversation}
           messageCount={messages.length}
+          avatarUrl={avatarUrl}
         />
 
         <div className="flex-1 flex flex-col h-full overflow-hidden">
@@ -135,6 +138,7 @@ export default function App({
             onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
             isSidebarOpen={isSidebarOpen}
             title={title}
+            avatarUrl={avatarUrl}
           />
 
           {error && (
@@ -156,10 +160,10 @@ export default function App({
           <main className="flex-1 flex flex-col overflow-hidden relative">
             {messages.length === 0 ? (
               <div className="flex-1 overflow-y-auto flex items-center justify-center">
-                <WelcomeScreen onSelectPrompt={sendMessage} welcomeMessage={welcomeMessage} suggestions={suggestedPrompts} />
+                <WelcomeScreen onSelectPrompt={sendMessage} welcomeMessage={welcomeMessage} suggestions={suggestedPrompts} avatarUrl={avatarUrl} />
               </div>
             ) : (
-              <MessageList messages={messages} isLoading={isLoading} />
+              <MessageList messages={messages} isLoading={isLoading} avatarUrl={avatarUrl} />
             )}
 
             <MessageComposer onSend={sendMessage} disabled={isLoading} />

@@ -1,7 +1,10 @@
 import React from 'react';
 import { Plus, MessageSquare, Info, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { DEFAULT_AVATAR } from '../assets/avatar';
 
-export default function Sidebar({ isOpen, onClose, onNewChat, messageCount }) {
+export default function Sidebar({ isOpen, onClose, onNewChat, messageCount, avatarUrl = null }) {
+  const botAvatar = avatarUrl || DEFAULT_AVATAR;
+
   if (!isOpen) return null;
 
   return (
@@ -17,7 +20,7 @@ export default function Sidebar({ isOpen, onClose, onNewChat, messageCount }) {
           <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
             <div className="flex items-center gap-2">
               <img 
-                src="/pydah-avatar.png" 
+                src={botAvatar} 
                 alt="Pydah AI Mascot" 
                 className="w-7 h-7 object-contain shrink-0" 
               />

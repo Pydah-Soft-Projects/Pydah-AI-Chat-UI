@@ -4,6 +4,7 @@ import { useChat } from '../hooks/useChat';
 import WelcomeScreen from './WelcomeScreen';
 import MessageList from './MessageList';
 import MessageComposer from './MessageComposer';
+import { DEFAULT_AVATAR } from '../assets/avatar';
 
 export default function FloatingWidget({
   apiBaseUrl = null,
@@ -12,8 +13,10 @@ export default function FloatingWidget({
   title = "Pydah AI Assistant",
   welcomeMessage = null,
   suggestedPrompts = null,
-  position = "bottom-right"
+  position = "bottom-right",
+  avatarUrl = null
 }) {
+  const botAvatar = avatarUrl || DEFAULT_AVATAR;
   const [isOpen, setIsOpen] = useState(false);
   
   const [btnOffset, setBtnOffset] = useState({ x: 0, y: 0 });
@@ -148,7 +151,7 @@ export default function FloatingWidget({
         ) : (
           <div className="relative pointer-events-none flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8">
             <img 
-              src="/pydah-avatar.png" 
+              src={botAvatar} 
               alt="Pydah AI Mascot" 
               className="w-full h-full object-contain drop-shadow-sm" 
             />
@@ -180,7 +183,7 @@ export default function FloatingWidget({
             <div className="flex items-center gap-2 sm:gap-2.5">
               <GripHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 hover:text-slate-500 transition-colors shrink-0" />
               <img 
-                src="/pydah-avatar.png" 
+                src={botAvatar} 
                 alt="Pydah AI Mascot" 
                 className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0" 
               />
@@ -242,7 +245,7 @@ export default function FloatingWidget({
                 />
               </div>
             ) : (
-              <MessageList messages={messages} isLoading={isLoading} />
+              <MessageList messages={messages} isLoading={isLoading} avatarUrl={avatarUrl} />
             )}
 
             <MessageComposer onSend={sendMessage} disabled={isLoading} isCompact={true} />

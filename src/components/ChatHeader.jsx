@@ -1,7 +1,10 @@
 import React from 'react';
 import { Bot, Plus, PanelLeft, Sparkles } from 'lucide-react';
+import { DEFAULT_AVATAR } from '../assets/avatar';
 
-export default function ChatHeader({ onNewChat, onToggleSidebar, isSidebarOpen, title }) {
+export default function ChatHeader({ onNewChat, onToggleSidebar, isSidebarOpen, title, avatarUrl = null }) {
+  const botAvatar = avatarUrl || DEFAULT_AVATAR;
+
   return (
     <header className="h-16 bg-white border-b border-slate-200 px-4 flex items-center justify-between sticky top-0 z-20 shadow-sm">
       <div className="flex items-center gap-3">
@@ -16,7 +19,7 @@ export default function ChatHeader({ onNewChat, onToggleSidebar, isSidebarOpen, 
 
         <div className="flex items-center gap-2.5">
           <img 
-            src="/pydah-avatar.png" 
+            src={botAvatar} 
             alt="Pydah AI Mascot" 
             className="w-9 h-9 object-contain shrink-0" 
           />

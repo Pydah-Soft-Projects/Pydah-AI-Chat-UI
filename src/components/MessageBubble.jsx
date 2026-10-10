@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { User, Sparkles, Copy, Check } from 'lucide-react';
 import MarkdownRenderer from './MarkdownRenderer';
+import { DEFAULT_AVATAR } from '../assets/avatar';
 
-export default function MessageBubble({ message }) {
+export default function MessageBubble({ message, avatarUrl = null }) {
   const isUser = message.role === 'user';
+  const botAvatar = avatarUrl || DEFAULT_AVATAR;
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -21,7 +23,7 @@ export default function MessageBubble({ message }) {
         </div>
       ) : (
         <img 
-          src="/pydah-avatar.png" 
+          src={botAvatar} 
           alt="Pydah AI Avatar" 
           className="w-8 h-8 object-contain shrink-0" 
         />

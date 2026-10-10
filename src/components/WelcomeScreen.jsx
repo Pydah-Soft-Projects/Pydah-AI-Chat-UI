@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sparkles, Code2, PenTool, GraduationCap, Lightbulb } from 'lucide-react';
+import { DEFAULT_AVATAR } from '../assets/avatar';
 
 const DEFAULT_SUGGESTIONS = [
   {
@@ -28,14 +29,15 @@ const DEFAULT_SUGGESTIONS = [
   }
 ];
 
-export default function WelcomeScreen({ onSelectPrompt, welcomeMessage = null, suggestions = null, isCompact = false }) {
+export default function WelcomeScreen({ onSelectPrompt, welcomeMessage = null, suggestions = null, isCompact = false, avatarUrl = null }) {
+  const botAvatar = avatarUrl || DEFAULT_AVATAR;
   const headingText = welcomeMessage || "How can I help you today?";
   const items = suggestions || DEFAULT_SUGGESTIONS;
 
   return (
     <div className={`max-w-3xl mx-auto px-4 ${isCompact ? 'py-4 flex flex-col items-center text-center' : 'py-8 sm:py-12 flex flex-col items-center text-center'}`}>
       <img 
-        src="/pydah-avatar.png" 
+        src={botAvatar} 
         alt="Pydah AI Mascot" 
         className={`${isCompact ? 'w-16 h-16 mb-3' : 'w-24 h-24 mb-6'} object-contain shrink-0 drop-shadow-sm`} 
       />
