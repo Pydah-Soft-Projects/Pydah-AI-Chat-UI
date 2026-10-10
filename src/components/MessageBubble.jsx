@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User, Sparkles, Copy, Check } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
 
 export default function MessageBubble({ message }) {
   const isUser = message.role === 'user';
@@ -37,8 +38,8 @@ export default function MessageBubble({ message }) {
             ? 'bg-brand-500 text-white rounded-tr-xs shadow-sm' 
             : 'bg-white border border-slate-200/80 text-slate-800 rounded-tl-xs shadow-sm'
         }`}>
-          <div className="whitespace-pre-wrap break-words">
-            {message.content}
+          <div className="break-words">
+            <MarkdownRenderer content={message.content} isUser={isUser} />
           </div>
 
           {!isUser && (
