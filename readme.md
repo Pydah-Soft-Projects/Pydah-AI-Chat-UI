@@ -125,23 +125,37 @@ Add these lines inside your layout's `<head>` or before `</body>`:
 
 ### B. React Apps via Dynamic Loader Component (`useEffect`)
 
-To guarantee zero React version mismatch errors when dynamically injecting UMD scripts inside host React applications:
+To guarantee zero React version mismatch errors and prevent duplicate floating widget auto-mounts when dynamically injecting UMD scripts inside host React applications:
 
 ```jsx
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
-export default function PydahAiChat({ mode = 'widget', assistantId = 'student-assistant', apiBaseUrl = 'http://localhost:8000', authToken }) {
+export default function PydahAiChat({
+  mode = 'widget',
+  assistantId = 'student-assistant',
+  apiBaseUrl = 'http://localhost:8000',
+  authToken = null,
+  title = "Pydah Student Assistant",
+  welcomeMessage = "How can I help you today?",
+  position = 'bottom-right',
+  ...restProps
+}) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Expose React & ReactDOM globally BEFORE UMD bundle executes
+      // Expose React & ReactDOM globally BEFORE UMD bundle executes to prevent React hook errors
       window.React = React;
       window.ReactDOM = ReactDOM;
 
+      // Disable auto-mounting to prevent duplicate floating widgets on document.body
+      window.PYDAH_AI_DISABLE_AUTO_MOUNT = true;
+
       window.PYDAH_AI_API_URL = apiBaseUrl;
       window.PYDAH_AI_ASSISTANT_ID = assistantId;
+      window.PYDAH_AI_TITLE = title;
+      window.PYDAH_AI_WELCOME_MESSAGE = welcomeMessage;
       if (authToken) window.PYDAH_AI_AUTH_TOKEN = authToken;
 
       // Inject Stylesheet
@@ -165,17 +179,31 @@ export default function PydahAiChat({ mode = 'widget', assistantId = 'student-as
         setIsLoaded(true);
       }
     }
-  }, [apiBaseUrl, assistantId, authToken]);
+  }, [apiBaseUrl, assistantId, authToken, title, welcomeMessage]);
 
   if (!isLoaded || typeof window === 'undefined' || !window.PydahAIChatUI) {
     return null;
   }
 
+  const UIModule = window.PydahAIChatUI;
   const Component = mode === 'embedded' 
-    ? (window.PydahAIChatUI.PydahAIChatPage || window.PydahAIChatUI.default)
-    : (window.PydahAIChatUI.PydahAIChatWidget || window.PydahAIChatUI.default);
+    ? (UIModule.PydahAIChatPage || UIModule.default || UIModule)
+    : (UIModule.PydahAIChatWidget || UIModule.default || UIModule);
 
-  return <Component mode={mode} assistantId={assistantId} authToken={authToken} apiBaseUrl={apiBaseUrl} />;
+  if (!Component) return null;
+
+  return (
+    <Component 
+      mode={mode} 
+      assistantId={assistantId} 
+      authToken={authToken} 
+      apiBaseUrl={apiBaseUrl}
+      title={title}
+      welcomeMessage={welcomeMessage}
+      position={position}
+      {...restProps} 
+    />
+  );
 }
 ```
 

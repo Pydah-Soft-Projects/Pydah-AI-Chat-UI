@@ -12,8 +12,11 @@ export function resolveApiUrl(propUrl = null) {
   }
 
   // 1. Check Window Global Override at request execution time
-  if (typeof window !== 'undefined' && window.PYDAH_AI_API_URL && typeof window.PYDAH_AI_API_URL === 'string' && window.PYDAH_AI_API_URL.trim() !== '') {
-    return window.PYDAH_AI_API_URL.trim();
+  if (typeof window !== 'undefined') {
+    const winUrl = window.PYDAH_AI_API_URL || window.PYDAH_AI_API_BASE_URL || window.VITE_PYDAH_AI_API_URL || window.PYDAH_AI_URL;
+    if (winUrl && typeof winUrl === 'string' && winUrl.trim() !== '') {
+      return winUrl.trim();
+    }
   }
 
   // 2. Host Application Environment Variables
