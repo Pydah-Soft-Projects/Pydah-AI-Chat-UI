@@ -2,7 +2,7 @@
 
 A modern, responsive, reusable AI chat interface for the **Pydah AI** backend platform.
 
-Supports **React Component Package Imports** and **Hosted CDN Script Embeds** across all frontend frameworks and web applications.
+Supports **React Component Package Imports**, **Hosted CDN Script Embeds**, and **Zero-Conflict Isolated iFrame Fallbacks** across all frontend frameworks and web applications.
 
 * **Live Web Preview:** [https://pydah-ai.netlify.app/](https://pydah-ai.netlify.app/)
 * **Hosted CDN Script:** `https://pydah-ai.netlify.app/index.umd.js`
@@ -17,6 +17,7 @@ Supports **React Component Package Imports** and **Hosted CDN Script Embeds** ac
 | :--- | :---: | :--- | :--- |
 | **React Package Import** | **YES** | Host app's `.env` file (`VITE_PYDAH_AI_API_URL=...`) | Pass `assistantId="student-assistant"` prop |
 | **CDN Script Embed** | **NO** | Auto-defaults to backend URL | Set `window.PYDAH_AI_ASSISTANT_ID = "student-assistant"` |
+| **Isolated iFrame Embed** | **NO** | Set via query param `api_url` | Set via query param `assistant_id=student-assistant` |
 
 ### Available Assistant Personas (`assistantId`):
 - `student-assistant`: Handles student profile details, attendance records, and academic grade reports.
@@ -123,96 +124,89 @@ Add these lines inside your layout's `<head>` or before `</body>`:
 
 ---
 
-### B. React Apps via `public/index.html` (Vite / Create-React-App)
+### B. React Apps via Dynamic Loader Component (`useEffect`)
 
-In your React app's `public/index.html` (or `index.html`):
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Student Dashboard</title>
-
-    <script>
-      window.PYDAH_AI_ASSISTANT_ID = "student-assistant";
-    </script>
-    <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
-    <script src="https://pydah-ai.netlify.app/index.umd.js" async></script>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
-```
-
----
-
-### C. React Apps via Dynamic Loader Component (`useEffect`)
+To guarantee zero React version mismatch errors when dynamically injecting UMD scripts inside host React applications:
 
 ```jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 
-export default function StudentDashboardLayout({ children }) {
+export default function PydahAiChat({ mode = 'widget', assistantId = 'student-assistant', apiBaseUrl = 'http://localhost:8000', authToken }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    // Set Assistant ID Persona Configuration
-    window.PYDAH_AI_ASSISTANT_ID = "student-assistant";
+    if (typeof window !== 'undefined') {
+      // Expose React & ReactDOM globally BEFORE UMD bundle executes
+      window.React = React;
+      window.ReactDOM = ReactDOM;
 
-    // 1. Inject Stylesheet
-    if (!document.getElementById('pydah-ai-style')) {
-      const link = document.createElement('link');
-      link.id = 'pydah-ai-style';
-      link.rel = 'stylesheet';
-      link.href = 'https://pydah-ai.netlify.app/style.css';
-      document.head.appendChild(link);
+      window.PYDAH_AI_API_URL = apiBaseUrl;
+      window.PYDAH_AI_ASSISTANT_ID = assistantId;
+      if (authToken) window.PYDAH_AI_AUTH_TOKEN = authToken;
+
+      // Inject Stylesheet
+      if (!document.getElementById('pydah-ai-style')) {
+        const link = document.createElement('link');
+        link.id = 'pydah-ai-style';
+        link.rel = 'stylesheet';
+        link.href = 'https://pydah-ai.netlify.app/style.css';
+        document.head.appendChild(link);
+      }
+
+      // Inject Script
+      if (!document.getElementById('pydah-ai-script')) {
+        const script = document.createElement('script');
+        script.id = 'pydah-ai-script';
+        script.src = 'https://pydah-ai.netlify.app/index.umd.js';
+        script.async = true;
+        script.onload = () => setIsLoaded(true);
+        document.body.appendChild(script);
+      } else if (window.PydahAIChatUI) {
+        setIsLoaded(true);
+      }
     }
+  }, [apiBaseUrl, assistantId, authToken]);
 
-    // 2. Inject Widget Script
-    if (!document.getElementById('pydah-ai-script')) {
-      const script = document.createElement('script');
-      script.id = 'pydah-ai-script';
-      script.src = 'https://pydah-ai.netlify.app/index.umd.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
+  if (!isLoaded || typeof window === 'undefined' || !window.PydahAIChatUI) {
+    return null;
+  }
 
-  return <div>{children}</div>;
+  const Component = mode === 'embedded' 
+    ? (window.PydahAIChatUI.PydahAIChatPage || window.PydahAIChatUI.default)
+    : (window.PydahAIChatUI.PydahAIChatWidget || window.PydahAIChatUI.default);
+
+  return <Component mode={mode} assistantId={assistantId} authToken={authToken} apiBaseUrl={apiBaseUrl} />;
 }
 ```
 
 ---
 
-### D. Next.js React Apps (`<Script />` Component)
+## 🛡️ 4. Integration Method 3: Zero-Conflict Isolated iFrame Fallback
 
-In your `app/layout.jsx` or `pages/_app.jsx`:
+If a host React application suffers from strict React version or hook conflicts, use the **Isolated iFrame Embed**. It guarantees 100% rendering without any DOM or React hook conflict:
 
 ```jsx
-'use client';
-import Script from 'next/script';
+// Embedded Container Mode via Isolated iFrame
+export default function AiAssistantPage() {
+  const userToken = localStorage.getItem("token");
+  const backendUrl = "http://localhost:8000";
 
-export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="stylesheet" href="https://pydah-ai.netlify.app/style.css" />
-      </head>
-      <body>
-        {children}
-        {/* Instant Netlify CDN Widget Script */}
-        <Script 
-          src="https://pydah-ai.netlify.app/index.umd.js" 
-          strategy="lazyOnload" 
-        />
-      </body>
-    </html>
+    <div className="w-full h-full min-h-[550px] relative overflow-hidden rounded-xl border border-slate-200 shadow-sm">
+      <iframe
+        src={`https://pydah-ai.netlify.app/?assistant_id=student-assistant&api_url=${encodeURIComponent(backendUrl)}&auth_token=${encodeURIComponent(userToken || '')}&title=Pydah%20Student%20Assistant`}
+        className="w-full h-full border-0"
+        title="Pydah Student Assistant"
+      />
+    </div>
   );
 }
 ```
 
 ---
 
-## 🎨 4. Component Props & Exports Reference
+## 🎨 5. Component Props & Exports Reference
 
 | Export Name | Usage | Description |
 | :--- | :--- | :--- |
@@ -233,7 +227,7 @@ export default function RootLayout({ children }) {
 
 ---
 
-## 🛠️ 5. Development & Building
+## 🛠️ 6. Development & Building
 
 ```bash
 npm run dev     # Run local standalone demo server (http://localhost:3000)
