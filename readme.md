@@ -2,7 +2,7 @@
 
 A modern, responsive, reusable AI chat interface for the **Pydah AI** backend platform.
 
-Supports **React Component Package Imports**, **Hosted CDN Script Embeds**, and **Zero-Conflict Isolated iFrame Fallbacks** across all frontend frameworks and web applications.
+Supports **React Component Package Imports** and **Hosted CDN Script Embeds** across all frontend frameworks and web applications.
 
 * **Live Web Preview:** [https://pydah-ai.netlify.app/](https://pydah-ai.netlify.app/)
 * **Hosted CDN Script:** `https://pydah-ai.netlify.app/index.umd.js`
@@ -17,7 +17,6 @@ Supports **React Component Package Imports**, **Hosted CDN Script Embeds**, and 
 | :--- | :---: | :--- | :--- |
 | **React Package Import** | **YES** | Host app's `.env` file (`VITE_PYDAH_AI_API_URL=...`) | Pass `assistantId="student-assistant"` prop |
 | **CDN Script Embed** | **NO** | Auto-defaults to backend URL | Set `window.PYDAH_AI_ASSISTANT_ID = "student-assistant"` |
-| **Isolated iFrame Embed** | **NO** | Set via query param `api_url` | Set via query param `assistant_id=student-assistant` |
 
 ### Available Assistant Personas (`assistantId`):
 - `student-assistant`: Handles student profile details, attendance records, and academic grade reports.
@@ -182,31 +181,7 @@ export default function PydahAiChat({ mode = 'widget', assistantId = 'student-as
 
 ---
 
-## 🛡️ 4. Integration Method 3: Zero-Conflict Isolated iFrame Fallback
-
-If a host React application suffers from strict React version or hook conflicts, use the **Isolated iFrame Embed**. It guarantees 100% rendering without any DOM or React hook conflict:
-
-```jsx
-// Embedded Container Mode via Isolated iFrame
-export default function AiAssistantPage() {
-  const userToken = localStorage.getItem("token");
-  const backendUrl = "http://localhost:8000";
-
-  return (
-    <div className="w-full h-full min-h-[550px] relative overflow-hidden rounded-xl border border-slate-200 shadow-sm">
-      <iframe
-        src={`https://pydah-ai.netlify.app/?assistant_id=student-assistant&api_url=${encodeURIComponent(backendUrl)}&auth_token=${encodeURIComponent(userToken || '')}&title=Pydah%20Student%20Assistant`}
-        className="w-full h-full border-0"
-        title="Pydah Student Assistant"
-      />
-    </div>
-  );
-}
-```
-
----
-
-## 🎨 5. Component Props & Exports Reference
+## 🎨 4. Component Props & Exports Reference
 
 | Export Name | Usage | Description |
 | :--- | :--- | :--- |
@@ -227,9 +202,28 @@ export default function AiAssistantPage() {
 
 ---
 
-## 🛠️ 6. Development & Building
+## 🛠️ 5. Development & Building
 
 ```bash
 npm run dev     # Run local standalone demo server (http://localhost:3000)
 npm run build   # Build production web preview & library bundle in dist/
 ```
+
+---
+
+## 🔗 6. Handling Links & External URLs Correctly
+
+When integrating **Pydah AI Chat UI** into your applications or managing links within AI responses, follow these best practices:
+
+### A. Dynamic Backend URLs (No Hardcoded Live URLs)
+- Avoid hardcoding backend endpoints directly in source code.
+- Always configure the backend API URL dynamically:
+  - **React Package Import:** Use environment variables (`VITE_PYDAH_AI_API_URL` or `NEXT_PUBLIC_PYDAH_AI_API_URL`) or pass `apiBaseUrl` prop.
+  - **CDN Script Embed:** Set `window.PYDAH_AI_API_URL = "https://your-backend.com"`.
+
+### B. External Links in AI Responses & Markdown
+- Any external links returned in assistant messages or rendered in markdown must use:
+  ```html
+  <a href="https://example.com" target="_blank" rel="noopener noreferrer">Link Text</a>
+  ```
+- This ensures security against tabnabbing attacks (`rel="noopener noreferrer"`) and opens links in a new browser tab.
