@@ -16,9 +16,11 @@ export default function Sidebar({ isOpen, onClose, onNewChat, messageCount }) {
         <div>
           <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center">
-                <Sparkles className="w-4 h-4" />
-              </div>
+              <img 
+                src="/pydah-avatar.png" 
+                alt="Pydah AI Mascot" 
+                className="w-7 h-7 object-contain shrink-0" 
+              />
               <span className="font-semibold text-slate-900 text-sm">Pydah AI Workspace</span>
             </div>
             <button 
@@ -31,7 +33,7 @@ export default function Sidebar({ isOpen, onClose, onNewChat, messageCount }) {
 
           <button
             onClick={() => { onNewChat(); onClose(); }}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium rounded-xl shadow-sm transition-all duration-150 active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-500 hover:bg-sky-600 text-white text-sm font-medium rounded-xl shadow-sm transition-all duration-150 active:scale-[0.98]"
           >
             <Plus className="w-4 h-4" />
             Start New Session
@@ -42,7 +44,7 @@ export default function Sidebar({ isOpen, onClose, onNewChat, messageCount }) {
               Active Session
             </h3>
             <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200/60 text-slate-700 text-sm">
-              <MessageSquare className="w-4 h-4 text-brand-500 shrink-0" />
+              <MessageSquare className="w-4 h-4 text-sky-500 shrink-0" />
               <div className="truncate flex-1">
                 <span className="font-medium text-slate-800 block truncate">Current Conversation</span>
                 <span className="text-xs text-slate-400">{messageCount} message{messageCount !== 1 ? 's' : ''}</span>
@@ -52,9 +54,9 @@ export default function Sidebar({ isOpen, onClose, onNewChat, messageCount }) {
         </div>
 
         <div className="space-y-3 pt-4 border-t border-slate-100">
-          <div className="p-3 bg-brand-50/60 rounded-xl border border-brand-100/80">
-            <div className="flex items-center gap-2 text-brand-700 font-medium text-xs mb-1">
-              <ShieldCheck className="w-4 h-4 text-brand-500" />
+          <div className="p-3 bg-sky-50/60 rounded-xl border border-sky-100/80">
+            <div className="flex items-center gap-2 text-sky-700 font-medium text-xs mb-1">
+              <ShieldCheck className="w-4 h-4 text-sky-500" />
               Centralized Backend
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">

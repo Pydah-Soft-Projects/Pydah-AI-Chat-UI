@@ -39,7 +39,7 @@ export default function App({
         {import.meta.env.DEV && (
           <div className="fixed top-0 left-0 right-0 h-10 bg-slate-900 text-white px-4 flex items-center justify-between z-50 text-xs shadow-md">
             <div className="flex items-center gap-2 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
               <span>Pydah AI UI Standalone Demo</span>
             </div>
 
@@ -48,7 +48,7 @@ export default function App({
                 onClick={() => setActiveMode("embedded")}
                 className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all ${
                   activeMode === "embedded" 
-                    ? "bg-brand-500 text-white shadow-xs" 
+                    ? "bg-[#0EA5E9] text-white shadow-xs" 
                     : "text-slate-400 hover:text-white"
                 }`}
               >
@@ -59,7 +59,7 @@ export default function App({
                 onClick={() => setActiveMode("widget")}
                 className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all ${
                   activeMode === "widget" 
-                    ? "bg-brand-500 text-white shadow-xs" 
+                    ? "bg-[#0EA5E9] text-white shadow-xs" 
                     : "text-slate-400 hover:text-white"
                 }`}
               >
@@ -90,7 +90,7 @@ export default function App({
       {import.meta.env.DEV && (
         <div className="h-10 bg-slate-900 text-white px-4 flex items-center justify-between shrink-0 text-xs z-30 shadow-md">
           <div className="flex items-center gap-2 font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
             <span>Pydah AI UI Standalone Demo</span>
           </div>
 
@@ -99,7 +99,7 @@ export default function App({
               onClick={() => setActiveMode("embedded")}
               className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all ${
                 activeMode === "embedded" 
-                  ? "bg-brand-500 text-white shadow-xs" 
+                  ? "bg-[#0EA5E9] text-white shadow-xs" 
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -110,7 +110,7 @@ export default function App({
               onClick={() => setActiveMode("widget")}
               className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all ${
                 activeMode === "widget" 
-                  ? "bg-brand-500 text-white shadow-xs" 
+                  ? "bg-[#0EA5E9] text-white shadow-xs" 
                   : "text-slate-400 hover:text-white"
               }`}
             >

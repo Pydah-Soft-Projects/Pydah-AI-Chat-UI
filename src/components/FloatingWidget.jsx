@@ -124,18 +124,22 @@ export default function FloatingWidget({
         style={{
           transform: `translate(${btnOffset.x}px, ${btnOffset.y}px)`
         }}
-        className={`fixed ${posClasses} z-50 p-3 sm:p-4 rounded-full bg-brand-500 hover:bg-brand-600 text-white shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-150 flex items-center justify-center group ring-4 ring-brand-500/20 ${
+        className={`fixed ${posClasses} z-50 p-3 sm:p-4 rounded-full bg-[#E0F2FE] hover:bg-[#BAE6FD] text-slate-700 border border-sky-200/80 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-150 flex items-center justify-center group ring-4 ring-sky-300/40 ${
           isBtnDragging ? 'cursor-grabbing scale-105' : 'cursor-grab'
         }`}
         aria-label="Open Pydah AI Assistant"
         title="Click to open or drag to move button"
       >
         {isOpen ? (
-          <X className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:rotate-90 duration-200 pointer-events-none" />
+          <X className="w-5 h-5 sm:w-6 sm:h-6 text-sky-700 transition-transform group-hover:rotate-90 duration-200 pointer-events-none" />
         ) : (
-          <div className="relative pointer-events-none">
-            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
-            <span className="absolute -top-1 -right-1 w-2 sm:w-2.5 h-2 sm:h-2.5 bg-emerald-400 border-2 border-brand-500 rounded-full"></span>
+          <div className="relative pointer-events-none flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8">
+            <img 
+              src="/pydah-avatar.png" 
+              alt="Pydah AI Mascot" 
+              className="w-full h-full object-contain drop-shadow-sm" 
+            />
+            <span className="absolute -top-0.5 -right-0.5 w-2 sm:w-2.5 h-2 sm:h-2.5 bg-emerald-400 border-2 border-white rounded-full"></span>
           </div>
         )}
       </button>
@@ -159,9 +163,11 @@ export default function FloatingWidget({
           >
             <div className="flex items-center gap-2 sm:gap-2.5">
               <GripHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 hover:text-slate-500 transition-colors shrink-0" />
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-brand-500 text-white flex items-center justify-center shadow-xs shrink-0">
-                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </div>
+              <img 
+                src="/pydah-avatar.png" 
+                alt="Pydah AI Mascot" 
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0" 
+              />
               <div className="min-w-0">
                 <h3 className="font-semibold text-slate-900 text-xs sm:text-sm leading-tight truncate max-w-[130px] sm:max-w-[170px]">
                   {title}

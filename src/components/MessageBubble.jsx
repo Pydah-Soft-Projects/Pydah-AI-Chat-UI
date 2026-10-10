@@ -15,11 +15,17 @@ export default function MessageBubble({ message }) {
   return (
     <div className={`flex gap-3 sm:gap-4 my-4 max-w-3xl mx-auto px-4 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
       {/* Avatar */}
-      <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
-        isUser ? 'bg-brand-500 text-white' : 'bg-white border border-slate-200 text-brand-500'
-      }`}>
-        {isUser ? <User className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
-      </div>
+      {isUser ? (
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm bg-sky-500 text-white">
+          <User className="w-4 h-4" />
+        </div>
+      ) : (
+        <img 
+          src="/pydah-avatar.png" 
+          alt="Pydah AI Avatar" 
+          className="w-8 h-8 object-contain shrink-0" 
+        />
+      )}
 
       {/* Message Content Container */}
       <div className={`flex flex-col max-w-[85%] sm:max-w-[80%] ${isUser ? 'items-end' : 'items-start'}`}>
@@ -35,7 +41,7 @@ export default function MessageBubble({ message }) {
 
         <div className={`relative group p-3.5 sm:p-4 rounded-2xl text-sm leading-relaxed ${
           isUser 
-            ? 'bg-brand-500 text-white rounded-tr-xs shadow-sm' 
+            ? 'bg-sky-500 text-white rounded-tr-xs shadow-sm' 
             : 'bg-white border border-slate-200/80 text-slate-800 rounded-tl-xs shadow-sm'
         }`}>
           <div className="break-words">

@@ -34,9 +34,11 @@ export default function WelcomeScreen({ onSelectPrompt, welcomeMessage = null, s
 
   return (
     <div className={`max-w-3xl mx-auto px-4 ${isCompact ? 'py-4 flex flex-col items-center text-center' : 'py-8 sm:py-12 flex flex-col items-center text-center'}`}>
-      <div className={`${isCompact ? 'w-12 h-12 mb-3 ring-4' : 'w-16 h-16 mb-6 ring-8'} rounded-2xl bg-brand-500/10 text-brand-500 flex items-center justify-center shadow-sm ring-brand-50/50`}>
-        <Sparkles className={isCompact ? "w-6 h-6" : "w-8 h-8"} />
-      </div>
+      <img 
+        src="/pydah-avatar.png" 
+        alt="Pydah AI Mascot" 
+        className={`${isCompact ? 'w-16 h-16 mb-3' : 'w-24 h-24 mb-6'} object-contain shrink-0 drop-shadow-sm`} 
+      />
 
       <h2 className={`${isCompact ? 'text-lg font-bold' : 'text-2xl sm:text-3xl font-bold'} text-slate-900 tracking-tight`}>
         {headingText}
@@ -52,13 +54,13 @@ export default function WelcomeScreen({ onSelectPrompt, welcomeMessage = null, s
             <button
               key={idx}
               onClick={() => onSelectPrompt(item.prompt || item.title)}
-              className="group text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-brand-500/50 hover:shadow-md transition-all duration-150 flex flex-col justify-between"
+              className="group text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-sky-500/50 hover:shadow-md transition-all duration-150 flex flex-col justify-between"
             >
               <div className="flex items-center gap-2.5 mb-1">
-                <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-brand-50 group-hover:text-brand-500 transition-colors">
+                <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-sky-50 group-hover:text-sky-500 transition-colors">
                   <IconComponent className="w-3.5 h-3.5" />
                 </div>
-                <h3 className="font-semibold text-slate-800 text-xs sm:text-sm group-hover:text-brand-500 transition-colors">
+                <h3 className="font-semibold text-slate-800 text-xs sm:text-sm group-hover:text-sky-500 transition-colors">
                   {item.title}
                 </h3>
               </div>

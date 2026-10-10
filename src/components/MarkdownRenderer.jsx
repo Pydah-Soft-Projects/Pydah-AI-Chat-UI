@@ -63,7 +63,7 @@ export function renderInlineMarkdown(text, isUser = false) {
           key={index}
           className={
             isUser
-              ? "px-1.5 py-0.5 bg-brand-600 border border-brand-400 text-white rounded text-xs font-mono"
+              ? "px-1.5 py-0.5 bg-sky-600 border border-sky-400 text-white rounded text-xs font-mono"
               : "px-1.5 py-0.5 bg-slate-100 border border-slate-200 text-pink-600 rounded text-xs font-mono"
           }
         >

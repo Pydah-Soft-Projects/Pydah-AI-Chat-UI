@@ -15,18 +15,20 @@ export default function ChatHeader({ onNewChat, onToggleSidebar, isSidebarOpen }
         </button>
 
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center text-white shadow-sm">
-            <Sparkles className="w-5 h-5" />
-          </div>
+          <img 
+            src="/pydah-avatar.png" 
+            alt="Pydah AI Mascot" 
+            className="w-9 h-9 object-contain shrink-0" 
+          />
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-semibold text-slate-900 text-base leading-tight">Pydah AI</h1>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-brand-50 text-brand-700 border border-brand-200">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-sky-50 text-sky-700 border border-sky-200">
                 Assistant
               </span>
             </div>
             <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
               Connected & Ready
             </p>
           </div>

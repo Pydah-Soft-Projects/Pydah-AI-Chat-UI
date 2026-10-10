@@ -33,7 +33,7 @@ export default function MessageComposer({ onSend, disabled, isCompact = false })
     <div className={`sticky bottom-0 bg-gradient-to-t from-[#F1F1F1] via-[#F1F1F1] to-transparent ${isCompact ? 'pt-2 pb-2.5 px-2.5' : 'pt-4 pb-4 px-3 sm:px-4'} z-10`}>
       <form 
         onSubmit={handleSubmit}
-        className="max-w-3xl mx-auto bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 shadow-md p-1.5 sm:p-2 flex items-end gap-1.5 sm:gap-2 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20 transition-all duration-150"
+        className="max-w-3xl mx-auto bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 shadow-md p-1.5 sm:p-2 flex items-end gap-1.5 sm:gap-2 focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-500/20 transition-all duration-150"
       >
         <textarea
           ref={textareaRef}
@@ -49,7 +49,7 @@ export default function MessageComposer({ onSend, disabled, isCompact = false })
         <button
           type="submit"
           disabled={!text.trim() || disabled}
-          className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-brand-500 hover:bg-brand-600 disabled:bg-slate-200 disabled:text-slate-400 text-white font-medium transition-all duration-150 shrink-0 shadow-xs disabled:shadow-none"
+          className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-sky-500 hover:bg-sky-600 disabled:bg-slate-200 disabled:text-slate-400 text-white font-medium transition-all duration-150 shrink-0 shadow-xs disabled:shadow-none"
           title="Send message"
         >
           <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
