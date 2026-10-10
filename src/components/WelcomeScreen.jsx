@@ -4,12 +4,6 @@ import { DEFAULT_AVATAR } from '../assets/avatar';
 
 const DEFAULT_SUGGESTIONS = [
   {
-    icon: Lightbulb,
-    title: "Explain a Technical Concept",
-    desc: "Understand complex topics simply",
-    prompt: "Explain how artificial intelligence language models process text step by step."
-  },
-  {
     icon: PenTool,
     title: "Help Write or Improve Something",
     desc: "Draft essays or professional content",
