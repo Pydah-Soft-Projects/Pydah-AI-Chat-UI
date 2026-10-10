@@ -2,19 +2,21 @@
  * Dynamically resolve the backend API URL.
  * Resolves in order:
  * 1. React component prop override (`apiBaseUrl`)
- * 2. Window global (`window.PYDAH_AI_API_URL`)
- * 3. Environment variables (Vite / Netlify / Host App .env)
- * 4. Localhost fallback
+ * 2. Window global override (`window.PYDAH_AI_API_URL`)
+ * 3. Environment variables (Vite / Host App .env)
+ * 4. Default fallback: http://localhost:8000
  */
 export function resolveApiUrl(propUrl = null) {
-  if (propUrl) return propUrl;
-
-  // 1. Check Window Global Override
-  if (typeof window !== 'undefined' && window.PYDAH_AI_API_URL) {
-    return window.PYDAH_AI_API_URL;
+  if (propUrl && typeof propUrl === 'string' && propUrl.trim() !== '') {
+    return propUrl.trim();
   }
 
-  // 2. Vite / Netlify Environment Variables
+  // 1. Check Window Global Override at request execution time
+  if (typeof window !== 'undefined' && window.PYDAH_AI_API_URL && typeof window.PYDAH_AI_API_URL === 'string' && window.PYDAH_AI_API_URL.trim() !== '') {
+    return window.PYDAH_AI_API_URL.trim();
+  }
+
+  // 2. Host Application Environment Variables
   try {
     if (typeof import.meta !== 'undefined' && import.meta.env) {
       if (import.meta.env.VITE_PYDAH_AI_API_URL) return import.meta.env.VITE_PYDAH_AI_API_URL;
@@ -22,7 +24,6 @@ export function resolveApiUrl(propUrl = null) {
     }
   } catch (e) {}
 
-  // 3. Webpack / Process Environment Variables
   try {
     if (typeof process !== 'undefined' && process.env) {
       if (process.env.VITE_PYDAH_AI_API_URL) return process.env.VITE_PYDAH_AI_API_URL;
@@ -43,6 +44,7 @@ export async function sendChatMessage({
   authToken = null,
   apiBaseUrl = null
 }) {
+  // Dynamically resolve base URL right before sending request
   const baseUrl = resolveApiUrl(apiBaseUrl);
   const endpoint = `${baseUrl.replace(/\/$/, '')}/api/v1/chat`;
 
