@@ -75,7 +75,7 @@ export default function App({
           apiBaseUrl={apiBaseUrl}
           assistantId={assistantId}
           authToken={authToken}
-          title={title || "Pydah AI Assistant"}
+          title={title || "Nemo - Pydah AI Assistant"}
           welcomeMessage={welcomeMessage}
           suggestedPrompts={suggestedPrompts}
           position={position}

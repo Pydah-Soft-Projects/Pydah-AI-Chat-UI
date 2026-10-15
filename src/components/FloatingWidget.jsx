@@ -10,7 +10,7 @@ export default function FloatingWidget({
   apiBaseUrl = null,
   assistantId = "general-assistant",
   authToken = null,
-  title = "Pydah AI Assistant",
+  title = "Nemo - Pydah AI Assistant",
   welcomeMessage = null,
   suggestedPrompts = null,
   position = "bottom-right",

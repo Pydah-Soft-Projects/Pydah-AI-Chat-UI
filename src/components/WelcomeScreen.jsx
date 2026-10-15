@@ -1,74 +1,45 @@
 import React from 'react';
-import { Sparkles, Code2, PenTool, GraduationCap, Lightbulb } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { DEFAULT_AVATAR } from '../assets/avatar';
 
-const DEFAULT_SUGGESTIONS = [
-  {
-    icon: PenTool,
-    title: "Help Write or Improve Something",
-    desc: "Draft essays or professional content",
-    prompt: "Help me write a concise professional announcement explaining a new project launch."
-  },
-  {
-    icon: Code2,
-    title: "Solve a Programming Problem",
-    desc: "Debug code or algorithm design",
-    prompt: "Write a Python script to sort a list of dictionary items by date cleanly."
-  },
-  {
-    icon: GraduationCap,
-    title: "Explain Topic Step by Step",
-    desc: "Structured learning breakdown",
-    prompt: "What are the core concepts of web application development? Explain step by step."
-  }
-];
-
-export default function WelcomeScreen({ onSelectPrompt, welcomeMessage = null, suggestions = null, isCompact = false, avatarUrl = null }) {
+export default function WelcomeScreen({
+  onSelectPrompt = null,
+  welcomeMessage = null,
+  suggestions = null,
+  isCompact = false,
+  avatarUrl = null
+}) {
   const botAvatar = avatarUrl || DEFAULT_AVATAR;
-  const headingText = welcomeMessage || "How can I help you today?";
-  const items = suggestions || DEFAULT_SUGGESTIONS;
 
   return (
-    <div className={`max-w-3xl mx-auto px-4 ${isCompact ? 'py-4 flex flex-col items-center text-center' : 'py-8 sm:py-12 flex flex-col items-center text-center'}`}>
-      <img 
-        src={botAvatar} 
-        alt="Pydah AI Mascot" 
-        className={`${isCompact ? 'w-16 h-16 mb-3' : 'w-24 h-24 mb-6'} object-contain shrink-0 drop-shadow-sm`} 
-      />
-
-      <h2 className={`${isCompact ? 'text-lg font-bold' : 'text-2xl sm:text-3xl font-bold'} text-slate-900 tracking-tight`}>
-        {headingText}
-      </h2>
-      <p className={`mt-1 text-slate-500 ${isCompact ? 'text-xs max-w-xs' : 'text-sm sm:text-base max-w-md'}`}>
-        Ask me anything. I'm here to help you find answers and explore ideas.
-      </p>
-
-      <div className={`mt-6 grid grid-cols-1 ${isCompact ? 'gap-2 w-full' : 'sm:grid-cols-2 gap-3.5 w-full'}`}>
-        {items.map((item, idx) => {
-          const IconComponent = item.icon || Lightbulb;
-          return (
-            <button
-              key={idx}
-              onClick={() => onSelectPrompt(item.prompt || item.title)}
-              className="group text-left p-3 rounded-xl bg-white border border-slate-200 hover:border-sky-500/50 hover:shadow-md transition-all duration-150 flex flex-col justify-between"
-            >
-              <div className="flex items-center gap-2.5 mb-1">
-                <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-sky-50 group-hover:text-sky-500 transition-colors">
-                  <IconComponent className="w-3.5 h-3.5" />
-                </div>
-                <h3 className="font-semibold text-slate-800 text-xs sm:text-sm group-hover:text-sky-500 transition-colors">
-                  {item.title}
-                </h3>
-              </div>
-              {item.desc && (
-                <p className="text-[11px] text-slate-500 leading-normal pl-8">
-                  {item.desc}
-                </p>
-              )}
-            </button>
-          );
-        })}
+    <div className={`max-w-xl mx-auto px-4 ${isCompact ? 'py-4 sm:py-6 flex flex-col items-center text-center' : 'py-10 sm:py-16 flex flex-col items-center text-center'}`}>
+      {/* Avatar Container with glowing badge */}
+      <div className="relative mb-3 sm:mb-4 group">
+        <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 to-blue-500 opacity-20 blur-md group-hover:opacity-35 transition-all duration-300"></div>
+        <img 
+          src={botAvatar} 
+          alt="Nemo - Pydah AI Mascot" 
+          className={`${isCompact ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-24 h-24 sm:w-28 sm:h-28'} relative object-contain drop-shadow-md select-none transition-transform duration-200 group-hover:scale-105`} 
+        />
+        <span className="absolute bottom-0 right-0 w-3 h-3 sm:w-3.5 sm:h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
       </div>
+
+      {/* Intro Badge */}
+      <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-2.5 rounded-full bg-sky-50 border border-sky-100 text-sky-700 text-[11px] sm:text-xs font-medium">
+        <Sparkles className="w-3.5 h-3.5 text-sky-500 animate-pulse shrink-0" />
+        <span>Meet Nemo, your Pydah AI Companion</span>
+      </div>
+
+      {/* Main Intro Title */}
+      <h2 className={`${isCompact ? 'text-lg sm:text-xl font-bold' : 'text-2xl sm:text-3xl font-extrabold'} text-slate-900 tracking-tight`}>
+        Hi, I'm Nemo!
+      </h2>
+
+      {/* Welcome Message / Subtitle */}
+      <p className={`mt-1.5 font-medium text-slate-700 ${isCompact ? 'text-xs sm:text-sm max-w-xs' : 'text-base sm:text-lg max-w-md'}`}>
+        {welcomeMessage || "How can I help you today?"}
+      </p>
     </div>
   );
 }
+
