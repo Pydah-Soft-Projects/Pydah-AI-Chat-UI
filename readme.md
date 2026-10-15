@@ -19,7 +19,7 @@ Supports **React Component Package Imports** and **Hosted CDN Script Embeds** ac
 | **CDN Script Embed** | **NO** | Auto-defaults to backend URL | Set `window.PYDAH_AI_ASSISTANT_ID = "student-assistant"` |
 
 ### Available Assistant Personas (`assistantId`):
-- `student-assistant`: Handles student profile details, attendance records, and academic grade reports.
+- `student-assistant`: Handles student profile details, attendance records, academic grade reports, and class timetable/schedule.
 - `fee-assistant`: Handles fee summaries, tuition breakdown, and itemized pending dues.
 - `transport-assistant`: Handles bus allocation, driver contacts, and route schedules.
 - `general-assistant`: General institution guidance and default responses.
