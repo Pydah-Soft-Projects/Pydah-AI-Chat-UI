@@ -34,7 +34,7 @@ jobs:
       # Install Dependencies & Build CDN / Library
       #################################################
       - name: Install dependencies
-        run: npm ci
+        run: npm ci || npm install
 
       - name: Build Chat UI & Library
         env:
