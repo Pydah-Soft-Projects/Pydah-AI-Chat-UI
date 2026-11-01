@@ -4,10 +4,10 @@ A modern, responsive, reusable AI chat interface for the **Pydah AI** backend pl
 
 Supports **React Component Package Imports** and **Hosted CDN Script Embeds** across all frontend frameworks and web applications.
 
-* **Live Web Preview:** [https://pydah-ai-chat-ui.vercel.app/](https://pydah-ai-chat-ui.vercel.app/)
-* **Hosted CDN Script:** `https://pydah-ai-chat-ui.vercel.app/index.umd.js`
-* **Hosted CDN Stylesheet:** `https://pydah-ai-chat-ui.vercel.app/style.css`
-* **Live Production AI Backend URL:** `https://pydah-ai-api.onrender.com`
+* **Live Web Preview:** [https://nemo-chat.pydah.edu.in](https://nemo-chat.pydah.edu.in)
+* **Hosted CDN Script:** `https://nemo-chat.pydah.edu.in/index.umd.js`
+* **Hosted CDN Stylesheet:** `https://nemo-chat.pydah.edu.in/style.css`
+* **Live Production AI Backend URL:** `https://nemo-ai.pydah.edu.in`
 
 ---
 
@@ -45,13 +45,13 @@ Then run `npm install`.
 ### Host Application `.env` Setup (Optional Override):
 ```env
 # Vite Host Apps (.env)
-VITE_PYDAH_AI_API_URL=https://pydah-ai-api.onrender.com
+VITE_PYDAH_AI_API_URL=https://nemo-ai.pydah.edu.in
 
 # Create-React-App / Webpack Host Apps (.env)
-REACT_APP_PYDAH_AI_API_URL=https://pydah-ai-api.onrender.com
+REACT_APP_PYDAH_AI_API_URL=https://nemo-ai.pydah.edu.in
 
 # Next.js Host Apps (.env)
-NEXT_PUBLIC_PYDAH_AI_API_URL=https://pydah-ai-api.onrender.com
+NEXT_PUBLIC_PYDAH_AI_API_URL=https://nemo-ai.pydah.edu.in
 ```
 
 ### Floating Widget Mode (Bottom-Right Trigger Button):
@@ -103,7 +103,7 @@ export default function DedicatedChatPage() {
 
 ## 🌐 3. Integration Method 2: Hosted CDN Script Embeds (NO `.env` File Required)
 
-CDN script embeds automatically default to the live production backend: `https://pydah-ai-api.onrender.com`. No `.env` setup or React build tools are required!
+CDN script embeds automatically default to the live production backend: `https://nemo-ai.pydah.edu.in`. No `.env` setup or React build tools are required!
 
 ### A. HTML / Vanilla JS / PHP / Laravel / ASP.NET / Django
 Add these lines inside your layout's `<head>` or before `</body>`:
@@ -111,14 +111,14 @@ Add these lines inside your layout's `<head>` or before `</body>`:
 ```html
 <!-- Optional Global Configuration Override -->
 <script>
-  window.PYDAH_AI_API_URL = "https://pydah-ai-api.onrender.com";
+  window.PYDAH_AI_API_URL = "https://nemo-ai.pydah.edu.in";
   window.PYDAH_AI_ASSISTANT_ID = "student-assistant"; // Persona identifier
   window.PYDAH_AI_AUTH_TOKEN = "YOUR_USER_BEARER_TOKEN";
 </script>
 
 <!-- Pydah AI Floating Chat Widget Styles & Script -->
-<link rel="stylesheet" href="https://pydah-ai-chat-ui.vercel.app/style.css" />
-<script src="https://pydah-ai-chat-ui.vercel.app/index.umd.js" async></script>
+<link rel="stylesheet" href="https://nemo-chat.pydah.edu.in/style.css" />
+<script src="https://nemo-chat.pydah.edu.in/index.umd.js" async></script>
 ```
 
 ---
@@ -163,7 +163,7 @@ export default function PydahAiChat({
         const link = document.createElement('link');
         link.id = 'pydah-ai-style';
         link.rel = 'stylesheet';
-        link.href = 'https://pydah-ai-chat-ui.vercel.app/style.css';
+        link.href = 'https://nemo-chat.pydah.edu.in/style.css';
         document.head.appendChild(link);
       }
 
@@ -171,7 +171,7 @@ export default function PydahAiChat({
       if (!document.getElementById('pydah-ai-script')) {
         const script = document.createElement('script');
         script.id = 'pydah-ai-script';
-        script.src = 'https://pydah-ai-chat-ui.vercel.app/index.umd.js';
+        script.src = 'https://nemo-chat.pydah.edu.in/index.umd.js';
         script.async = true;
         script.onload = () => setIsLoaded(true);
         document.body.appendChild(script);
@@ -226,7 +226,7 @@ export default function PydahAiChat({
 | `title` | `string` | `"Pydah Student Assistant"` | Assistant header title. |
 | `welcomeMessage` | `string` | `"How can I help you today?"` | Welcome heading on empty chat screen. |
 | `position` | `'bottom-right' \| 'bottom-left'` | `'bottom-right'` | Floating button screen position. |
-| `apiBaseUrl` | `string` | `https://pydah-ai-api.onrender.com` | (Optional override) Manually specifies backend URL. |
+| `apiBaseUrl` | `string` | `https://nemo-ai.pydah.edu.in` | (Optional override) Manually specifies backend URL. |
 
 ---
 
