@@ -8,7 +8,7 @@ import { DEFAULT_AVATAR } from '../assets/avatar';
 
 export default function FloatingWidget({
   apiBaseUrl = null,
-  assistantId = "general-assistant",
+  assistantId = "portal-assistant",
   authToken = null,
   title = "Nemo - Pydah AI Assistant",
   welcomeMessage = null,

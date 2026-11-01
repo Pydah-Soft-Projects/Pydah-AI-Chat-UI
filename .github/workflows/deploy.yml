@@ -1,0 +1,119 @@
+name: Deploy Chat UI CDN to Production
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: production-cdn
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build & Deploy CDN Assets to Lightsail
+    runs-on: ubuntu-latest
+
+    steps:
+      #################################################
+      # Checkout Repository
+      #################################################
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      #################################################
+      # Setup Node.js
+      #################################################
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      #################################################
+      # Install Dependencies & Build CDN / Library
+      #################################################
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Chat UI & Library
+        env:
+          VITE_PYDAH_AI_API_URL: https://nemo-ai.pydah.edu.in
+        run: npm run build
+
+      #################################################
+      # Configure SSH
+      #################################################
+      - name: Configure SSH
+        run: |
+          set -e
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
+
+      #################################################
+      # Upload compiled dist to Lightsail /tmp
+      #################################################
+      - name: Upload frontend dist to server
+        env:
+          SSH_USER: ${{ secrets.SSH_USER || 'ec2-user' }}
+        run: |
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            dist/ \
+            "${SSH_USER}@${{ secrets.SERVER_IP }}:/tmp/pydah-cdn-dist/"
+
+      #################################################
+      # Deploy to Nginx CDN Web Root
+      #################################################
+      - name: Deploy to server
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SSH_USER: ${{ secrets.SSH_USER || 'ec2-user' }}
+        run: |
+          set -e
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=yes \
+            -o BatchMode=yes \
+            "${SSH_USER}@${SERVER_IP}" << 'ENDSSH'
+
+          set -e
+
+          CDN_WEB_ROOT="/var/www/pydah-cdn/dist"
+
+          echo "=========================================="
+          echo "Starting Pydah AI Chat UI CDN Deployment"
+          echo "=========================================="
+
+          # Create directory if it doesn't exist
+          sudo mkdir -p "${CDN_WEB_ROOT}"
+
+          echo "==> Syncing build assets to ${CDN_WEB_ROOT}..."
+          sudo rsync -av --delete /tmp/pydah-cdn-dist/ "${CDN_WEB_ROOT}/"
+
+          echo "==> Setting correct permissions..."
+          sudo chmod -R 755 /var/www/pydah-cdn
+
+          echo "==> Cleaning up temporary upload directory..."
+          rm -rf /tmp/pydah-cdn-dist
+
+          echo "==> Verified files in ${CDN_WEB_ROOT}:"
+          ls -lh "${CDN_WEB_ROOT}"
+
+          echo "==> Reloading Nginx..."
+          sudo nginx -t && sudo systemctl reload nginx
+
+          echo "=========================================="
+          echo "Chat UI CDN Deployment completed successfully!"
+          echo "=========================================="
+
+          ENDSSH
+
+      #################################################
+      # Cleanup SSH key
+      #################################################
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
+

@@ -11,7 +11,7 @@ import { AlertCircle, RefreshCw, Layout, MessageSquarePlus } from 'lucide-react'
 export default function App({
   mode: initialMode = "embedded",
   apiBaseUrl = null,
-  assistantId = "general-assistant",
+  assistantId = "portal-assistant",
   authToken = null,
   title = null,
   welcomeMessage = null,

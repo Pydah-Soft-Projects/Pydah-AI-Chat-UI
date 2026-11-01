@@ -3,7 +3,7 @@ import { sendChatMessage } from '../services/chatApi';
 
 export function useChat(options = {}) {
   const apiBaseUrl = typeof options === 'string' ? options : options?.apiBaseUrl || null;
-  const assistantId = typeof options === 'object' ? options?.assistantId || 'general-assistant' : 'general-assistant';
+  const assistantId = typeof options === 'object' ? options?.assistantId || 'portal-assistant' : 'portal-assistant';
   const authToken = typeof options === 'object' ? options?.authToken || null : null;
 
   const [messages, setMessages] = useState([]);
