@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 import { resolveApiUrl } from './services/chatApi';
@@ -74,8 +74,6 @@ if (typeof window !== 'undefined') {
     mountContainer.className = 'nemo-ai-root';
     document.body.appendChild(mountContainer);
 
-    const root = ReactDOM.createRoot(mountContainer);
-
     const renderWidget = () => {
       const apiBaseUrl = window.NEMO_AI_API_URL || window.PYDAH_AI_API_URL || window.NEMO_AI_API_BASE_URL || window.PYDAH_AI_API_BASE_URL || window.VITE_NEMO_AI_API_URL || window.VITE_PYDAH_AI_API_URL || null;
       const assistantId = window.NEMO_AI_ASSISTANT_ID || window.PYDAH_AI_ASSISTANT_ID || window.NEMO_AI_PERSONA || window.PYDAH_AI_PERSONA || 'portal-assistant';
@@ -86,8 +84,7 @@ if (typeof window !== 'undefined') {
       const mode = window.NEMO_AI_MODE || window.PYDAH_AI_MODE || 'widget';
 
       const Component = mode === 'embedded' ? NemoAIChatPage : NemoAIChatWidget;
-
-      root.render(
+      const element = (
         <Component
           apiBaseUrl={apiBaseUrl}
           assistantId={assistantId}
@@ -97,6 +94,13 @@ if (typeof window !== 'undefined') {
           position={position}
         />
       );
+
+      if (ReactDOM && typeof ReactDOM.createRoot === 'function') {
+        const root = ReactDOM.createRoot(mountContainer);
+        root.render(element);
+      } else if (ReactDOM && typeof ReactDOM.render === 'function') {
+        ReactDOM.render(element, mountContainer);
+      }
     };
 
     renderWidget();
