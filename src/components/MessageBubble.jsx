@@ -24,7 +24,7 @@ export default function MessageBubble({ message, avatarUrl = null }) {
       ) : (
         <img 
           src={botAvatar} 
-          alt="Pydah AI Avatar" 
+          alt="Nemo Avatar" 
           className="w-8 h-8 object-contain shrink-0" 
         />
       )}
@@ -32,7 +32,7 @@ export default function MessageBubble({ message, avatarUrl = null }) {
       {/* Message Content Container */}
       <div className={`flex flex-col max-w-[85%] sm:max-w-[80%] ${isUser ? 'items-end' : 'items-start'}`}>
         <div className="flex items-center gap-2 mb-1 text-xs text-slate-400 px-1">
-          <span className="font-medium text-slate-700">{isUser ? 'You' : 'Pydah AI'}</span>
+          <span className="font-medium text-slate-700">{isUser ? 'You' : 'Nemo'}</span>
           {message.timestamp && <span>• {message.timestamp}</span>}
           {message.model && (
             <span className="hidden sm:inline px-1.5 py-0.2 bg-slate-100 text-slate-500 rounded text-[10px]">

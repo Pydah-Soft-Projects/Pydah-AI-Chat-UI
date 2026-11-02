@@ -10,7 +10,7 @@ export default function FloatingWidget({
   apiBaseUrl = null,
   assistantId = "portal-assistant",
   authToken = null,
-  title = "Nemo - Pydah AI Assistant",
+  title = "Nemo",
   welcomeMessage = null,
   suggestedPrompts = null,
   position = "bottom-right",
@@ -143,7 +143,7 @@ export default function FloatingWidget({
         className={`fixed ${posClasses} z-50 p-3 sm:p-4 rounded-full bg-[#E0F2FE] hover:bg-[#BAE6FD] text-slate-700 border border-sky-200/80 shadow-lg hover:shadow-xl flex items-center justify-center group ring-4 ring-sky-300/40 select-none ${
           isBtnDragging ? 'transition-none cursor-grabbing scale-105' : 'transition-all duration-150 cursor-grab hover:scale-105 active:scale-95'
         }`}
-        aria-label="Open Pydah AI Assistant"
+        aria-label="Open Nemo Assistant"
         title="Click to open or drag to move button"
       >
         {isOpen ? (
@@ -152,7 +152,7 @@ export default function FloatingWidget({
           <div className="relative pointer-events-none flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8">
             <img 
               src={botAvatar} 
-              alt="Pydah AI Mascot" 
+              alt="Nemo Mascot" 
               className="w-full h-full object-contain drop-shadow-sm" 
             />
             <span className="absolute -top-0.5 -right-0.5 w-2 sm:w-2.5 h-2 sm:h-2.5 bg-emerald-400 border-2 border-white rounded-full"></span>
@@ -184,7 +184,7 @@ export default function FloatingWidget({
               <GripHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 hover:text-slate-500 transition-colors shrink-0" />
               <img 
                 src={botAvatar} 
-                alt="Pydah AI Mascot" 
+                alt="Nemo Mascot" 
                 className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0" 
               />
               <div className="min-w-0">

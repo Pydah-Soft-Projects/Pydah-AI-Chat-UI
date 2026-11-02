@@ -21,10 +21,10 @@ export default function Sidebar({ isOpen, onClose, onNewChat, messageCount, avat
             <div className="flex items-center gap-2">
               <img 
                 src={botAvatar} 
-                alt="Pydah AI Mascot" 
+                alt="Nemo Mascot" 
                 className="w-7 h-7 object-contain shrink-0" 
               />
-              <span className="font-semibold text-slate-900 text-sm">Pydah AI Workspace</span>
+              <span className="font-semibold text-slate-900 text-sm">Nemo Workspace</span>
             </div>
             <button 
               onClick={onClose}
@@ -63,12 +63,12 @@ export default function Sidebar({ isOpen, onClose, onNewChat, messageCount, avat
               Centralized Backend
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Powered by Pydah AI core LLM service with session context support.
+              Powered by Nemo core LLM service with session context support.
             </p>
           </div>
 
           <div className="flex items-center justify-between text-xs text-slate-400 px-1">
-            <span>Pydah AI UI v1.0.2.2</span>
+            <span>Nemo UI v1.0.2.2</span>
             <span className="flex items-center gap-1"><Info className="w-3.5 h-3.5" /> Core Engine</span>
           </div>
         </div>

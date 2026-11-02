@@ -13,7 +13,7 @@ export function resolveApiUrl(propUrl = null) {
 
   // 1. Check Window Global Override at request execution time
   if (typeof window !== 'undefined') {
-    const winUrl = window.PYDAH_AI_API_URL || window.PYDAH_AI_API_BASE_URL || window.VITE_PYDAH_AI_API_URL || window.PYDAH_AI_URL;
+    const winUrl = window.NEMO_AI_API_URL || window.PYDAH_AI_API_URL || window.NEMO_AI_API_BASE_URL || window.PYDAH_AI_API_BASE_URL || window.VITE_NEMO_AI_API_URL || window.VITE_PYDAH_AI_API_URL || window.NEMO_AI_URL || window.PYDAH_AI_URL;
     if (winUrl && typeof winUrl === 'string' && winUrl.trim() !== '') {
       return winUrl.trim();
     }
@@ -22,6 +22,8 @@ export function resolveApiUrl(propUrl = null) {
   // 2. Host Application Environment Variables
   try {
     if (typeof import.meta !== 'undefined' && import.meta.env) {
+      if (import.meta.env.VITE_NEMO_AI_API_URL) return import.meta.env.VITE_NEMO_AI_API_URL;
+      if (import.meta.env.NEMO_AI_API_URL) return import.meta.env.NEMO_AI_API_URL;
       if (import.meta.env.VITE_PYDAH_AI_API_URL) return import.meta.env.VITE_PYDAH_AI_API_URL;
       if (import.meta.env.PYDAH_AI_API_URL) return import.meta.env.PYDAH_AI_API_URL;
     }
@@ -29,6 +31,10 @@ export function resolveApiUrl(propUrl = null) {
 
   try {
     if (typeof process !== 'undefined' && process.env) {
+      if (process.env.VITE_NEMO_AI_API_URL) return process.env.VITE_NEMO_AI_API_URL;
+      if (process.env.REACT_APP_NEMO_AI_API_URL) return process.env.REACT_APP_NEMO_AI_API_URL;
+      if (process.env.NEXT_PUBLIC_NEMO_AI_API_URL) return process.env.NEXT_PUBLIC_NEMO_AI_API_URL;
+      if (process.env.NEMO_AI_API_URL) return process.env.NEMO_AI_API_URL;
       if (process.env.VITE_PYDAH_AI_API_URL) return process.env.VITE_PYDAH_AI_API_URL;
       if (process.env.REACT_APP_PYDAH_AI_API_URL) return process.env.REACT_APP_PYDAH_AI_API_URL;
       if (process.env.NEXT_PUBLIC_PYDAH_AI_API_URL) return process.env.NEXT_PUBLIC_PYDAH_AI_API_URL;
@@ -101,7 +107,7 @@ export async function sendChatMessage({
       throw new Error('Request timed out after 30 seconds. Please check backend status and try again.');
     }
     if (error.message === 'Failed to fetch') {
-      throw new Error('Unable to connect to Pydah AI backend service at ' + baseUrl + '. Please verify the backend URL.');
+      throw new Error('Unable to connect to Nemo backend service at ' + baseUrl + '. Please verify the backend URL.');
     }
     throw error;
   }

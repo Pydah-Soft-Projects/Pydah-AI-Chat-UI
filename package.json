@@ -34,7 +34,7 @@
     },
     "./style.css": "./dist/style.css"
   },
-  "description": "Reusable Pydah AI Chat UI Component Library for PydahSoft applications",
+  "description": "Reusable Nemo AI Chat UI Component Library",
   "files": [
     "dist",
     "src",

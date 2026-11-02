@@ -40,7 +40,7 @@ export default function MessageComposer({ onSend, disabled, isCompact = false })
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={isCompact ? "Ask Pydah AI..." : "Ask Pydah AI anything... (Press Enter to send)"}
+          placeholder={isCompact ? "Ask Nemo..." : "Ask Nemo anything... (Press Enter to send)"}
           rows={1}
           disabled={disabled}
           className="flex-1 max-h-32 sm:max-h-40 min-h-[38px] sm:min-h-[44px] py-2 px-2.5 sm:px-3 bg-transparent text-slate-800 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-none resize-none leading-relaxed"
@@ -58,7 +58,7 @@ export default function MessageComposer({ onSend, disabled, isCompact = false })
       
       {!isCompact && (
         <p className="text-[10px] sm:text-[11px] text-center text-slate-400 mt-1.5">
-          Pydah AI can make mistakes. Verify important information.
+          Nemo can make mistakes. Verify important information.
         </p>
       )}
     </div>

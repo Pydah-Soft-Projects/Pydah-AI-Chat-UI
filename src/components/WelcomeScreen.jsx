@@ -18,7 +18,7 @@ export default function WelcomeScreen({
         <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 to-blue-500 opacity-20 blur-md group-hover:opacity-35 transition-all duration-300"></div>
         <img 
           src={botAvatar} 
-          alt="Nemo - Pydah AI Mascot" 
+          alt="Nemo Mascot" 
           className={`${isCompact ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-24 h-24 sm:w-28 sm:h-28'} relative object-contain drop-shadow-md select-none transition-transform duration-200 group-hover:scale-105`} 
         />
         <span className="absolute bottom-0 right-0 w-3 h-3 sm:w-3.5 sm:h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
@@ -27,7 +27,7 @@ export default function WelcomeScreen({
       {/* Intro Badge */}
       <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-2.5 rounded-full bg-sky-50 border border-sky-100 text-sky-700 text-[11px] sm:text-xs font-medium">
         <Sparkles className="w-3.5 h-3.5 text-sky-500 animate-pulse shrink-0" />
-        <span>Meet Nemo, your Pydah AI Companion</span>
+        <span>Meet Nemo, your AI Companion</span>
       </div>
 
       {/* Main Intro Title */}

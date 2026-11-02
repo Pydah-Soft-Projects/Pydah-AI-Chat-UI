@@ -9,7 +9,7 @@ export default function LoadingIndicator() {
       </div>
 
       <div className="flex flex-col items-start">
-        <span className="text-xs font-medium text-slate-500 mb-1 px-1">Pydah AI</span>
+        <span className="text-xs font-medium text-slate-500 mb-1 px-1">Nemo</span>
         <div className="p-4 rounded-2xl rounded-tl-xs bg-white border border-slate-200/80 shadow-sm flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-sky-500 animate-bounce" style={{ animationDelay: '0ms' }}></span>
           <span className="w-2 h-2 rounded-full bg-sky-500 animate-bounce" style={{ animationDelay: '150ms' }}></span>
