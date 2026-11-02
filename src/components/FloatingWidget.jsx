@@ -10,6 +10,7 @@ export default function FloatingWidget({
   apiBaseUrl = null,
   assistantId = "portal-assistant",
   authToken = null,
+  serviceUrl = null,
   title = "Nemo",
   welcomeMessage = null,
   suggestedPrompts = null,
@@ -35,7 +36,7 @@ export default function FloatingWidget({
     sendMessage,
     retryLastMessage,
     clearConversation
-  } = useChat({ apiBaseUrl, assistantId, authToken });
+  } = useChat({ apiBaseUrl, assistantId, authToken, serviceUrl });
 
   const handleBtnMouseDown = (e) => {
     setIsBtnDragging(true);

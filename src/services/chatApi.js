@@ -45,17 +45,64 @@ export function resolveApiUrl(propUrl = null) {
   return 'http://localhost:8000';
 }
 
+/**
+ * Dynamically resolve the host application backend service URL (for tool dispatch).
+ * Resolves in order:
+ * 1. React component prop override (`serviceUrl` / `backendUrl` / `portalUrl`)
+ * 2. Window global override (`window.NEMO_AI_SERVICE_URL`, `window.NEMO_SERVICE_URL`, etc.)
+ * 3. Host application environment variables
+ */
+export function resolveServiceUrl(propUrl = null) {
+  if (propUrl && typeof propUrl === 'string' && propUrl.trim() !== '') {
+    return propUrl.trim().replace(/\/$/, '');
+  }
+
+  if (typeof window !== 'undefined') {
+    const winUrl = (
+      window.NEMO_AI_SERVICE_URL ||
+      window.NEMO_SERVICE_URL ||
+      window.PORTAL_BACKEND_URL ||
+      window.APPLICATION_SERVICE_URL ||
+      window.PYDAH_AI_SERVICE_URL
+    );
+    if (winUrl && typeof winUrl === 'string' && winUrl.trim() !== '') {
+      return winUrl.trim().replace(/\/$/, '');
+    }
+  }
+
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      if (import.meta.env.VITE_NEMO_AI_SERVICE_URL) return import.meta.env.VITE_NEMO_AI_SERVICE_URL;
+      if (import.meta.env.VITE_APPLICATION_SERVICE_URL) return import.meta.env.VITE_APPLICATION_SERVICE_URL;
+      if (import.meta.env.VITE_PYDAH_AI_SERVICE_URL) return import.meta.env.VITE_PYDAH_AI_SERVICE_URL;
+    }
+  } catch (e) {}
+
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      if (process.env.VITE_NEMO_AI_SERVICE_URL) return process.env.VITE_NEMO_AI_SERVICE_URL;
+      if (process.env.REACT_APP_NEMO_AI_SERVICE_URL) return process.env.REACT_APP_NEMO_AI_SERVICE_URL;
+      if (process.env.NEXT_PUBLIC_NEMO_AI_SERVICE_URL) return process.env.NEXT_PUBLIC_NEMO_AI_SERVICE_URL;
+      if (process.env.APPLICATION_SERVICE_URL) return process.env.APPLICATION_SERVICE_URL;
+    }
+  } catch (e) {}
+
+  return null;
+}
+
 export async function sendChatMessage({
   message,
   history = [],
   conversationId = null,
   assistantId = 'general-assistant',
   authToken = null,
-  apiBaseUrl = null
+  apiBaseUrl = null,
+  serviceUrl = null
 }) {
   // Dynamically resolve base URL right before sending request
   const baseUrl = resolveApiUrl(apiBaseUrl);
   const endpoint = `${baseUrl.replace(/\/$/, '')}/api/v1/chat`;
+  const resolvedServiceUrl = resolveServiceUrl(serviceUrl);
 
   const formattedHistory = history
     .filter(msg => msg.role === 'user' || msg.role === 'assistant')
@@ -72,12 +119,21 @@ export async function sendChatMessage({
     user_token: authToken
   };
 
+  if (resolvedServiceUrl) {
+    payload.service_url = resolvedServiceUrl;
+  }
+
   const headers = {
     'Content-Type': 'application/json',
   };
 
   if (authToken) {
     headers['Authorization'] = `Bearer ${authToken}`;
+  }
+
+  if (resolvedServiceUrl) {
+    headers['X-Service-URL'] = resolvedServiceUrl;
+    headers['X-Backend-URL'] = resolvedServiceUrl;
   }
 
   const controller = new AbortController();

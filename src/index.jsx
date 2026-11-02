@@ -10,7 +10,8 @@ import { resolveApiUrl } from './services/chatApi';
  */
 export function NemoAIChatUI(props) {
   const resolvedApiUrl = resolveApiUrl(props.apiBaseUrl || props.apiUrl);
-  return <App {...props} apiBaseUrl={resolvedApiUrl} />;
+  const resolvedServiceUrl = props.serviceUrl || props.backendUrl || props.portalUrl || null;
+  return <App {...props} apiBaseUrl={resolvedApiUrl} serviceUrl={resolvedServiceUrl} />;
 }
 
 // Backward-compatible alias
@@ -78,6 +79,7 @@ if (typeof window !== 'undefined') {
       const apiBaseUrl = window.NEMO_AI_API_URL || window.PYDAH_AI_API_URL || window.NEMO_AI_API_BASE_URL || window.PYDAH_AI_API_BASE_URL || window.VITE_NEMO_AI_API_URL || window.VITE_PYDAH_AI_API_URL || null;
       const assistantId = window.NEMO_AI_ASSISTANT_ID || window.PYDAH_AI_ASSISTANT_ID || window.NEMO_AI_PERSONA || window.PYDAH_AI_PERSONA || 'portal-assistant';
       const authToken = window.NEMO_AI_AUTH_TOKEN || window.PYDAH_AI_AUTH_TOKEN || null;
+      const serviceUrl = window.NEMO_AI_SERVICE_URL || window.NEMO_SERVICE_URL || window.PORTAL_BACKEND_URL || window.APPLICATION_SERVICE_URL || null;
       const title = window.NEMO_AI_TITLE || window.PYDAH_AI_TITLE || window.NEMO_AI_HEADER_TITLE || window.PYDAH_AI_HEADER_TITLE || null;
       const welcomeMessage = window.NEMO_AI_WELCOME_MESSAGE || window.PYDAH_AI_WELCOME_MESSAGE || null;
       const position = window.NEMO_AI_POSITION || window.PYDAH_AI_POSITION || 'bottom-right';
@@ -89,6 +91,7 @@ if (typeof window !== 'undefined') {
           apiBaseUrl={apiBaseUrl}
           assistantId={assistantId}
           authToken={authToken}
+          serviceUrl={serviceUrl}
           title={title}
           welcomeMessage={welcomeMessage}
           position={position}

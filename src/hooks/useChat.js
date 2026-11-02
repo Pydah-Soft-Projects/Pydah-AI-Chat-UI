@@ -5,6 +5,7 @@ export function useChat(options = {}) {
   const apiBaseUrl = typeof options === 'string' ? options : options?.apiBaseUrl || null;
   const assistantId = typeof options === 'object' ? options?.assistantId || 'portal-assistant' : 'portal-assistant';
   const authToken = typeof options === 'object' ? options?.authToken || null : null;
+  const serviceUrl = typeof options === 'object' ? options?.serviceUrl || options?.backendUrl || options?.portalUrl || null : null;
 
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +36,8 @@ export function useChat(options = {}) {
         conversationId,
         assistantId,
         authToken,
-        apiBaseUrl
+        apiBaseUrl,
+        serviceUrl
       });
 
       if (response.conversation_id) {
@@ -58,7 +60,7 @@ export function useChat(options = {}) {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, isLoading, conversationId, assistantId, authToken, apiBaseUrl]);
+  }, [messages, isLoading, conversationId, assistantId, authToken, apiBaseUrl, serviceUrl]);
 
   const retryLastMessage = useCallback(() => {
     if (messages.length === 0) return;

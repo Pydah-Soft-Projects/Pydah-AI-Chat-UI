@@ -13,6 +13,7 @@ export default function App({
   apiBaseUrl = null,
   assistantId = "portal-assistant",
   authToken = null,
+  serviceUrl = null,
   title = null,
   welcomeMessage = null,
   suggestedPrompts = null,
@@ -28,7 +29,7 @@ export default function App({
     sendMessage,
     retryLastMessage,
     clearConversation
-  } = useChat({ apiBaseUrl, assistantId, authToken });
+  } = useChat({ apiBaseUrl, assistantId, authToken, serviceUrl });
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -75,6 +76,7 @@ export default function App({
           apiBaseUrl={apiBaseUrl}
           assistantId={assistantId}
           authToken={authToken}
+          serviceUrl={serviceUrl}
           title={title || "Nemo"}
           welcomeMessage={welcomeMessage}
           suggestedPrompts={suggestedPrompts}

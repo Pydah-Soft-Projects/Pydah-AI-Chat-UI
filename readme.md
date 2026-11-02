@@ -69,6 +69,7 @@ export default function App() {
       <NemoAIChatWidget 
         assistantId="portal-assistant"
         authToken={userToken}
+        serviceUrl="https://student-api.mycollege.edu"
         title="Nemo" 
         welcomeMessage="How can I help you today?" 
       />
@@ -91,6 +92,7 @@ export default function DedicatedChatPage() {
       <NemoAIChatPage 
         assistantId="portal-assistant"
         authToken={userToken}
+        serviceUrl="https://student-api.mycollege.edu"
         title="Nemo" 
         welcomeMessage="How can I help you today?" 
       />
@@ -125,6 +127,7 @@ export default function NextChatLayout({ children }) {
 
       <NemoAIChatWidget
         apiBaseUrl={process.env.NEXT_PUBLIC_NEMO_AI_API_URL || "https://nemo-ai.pydah.edu.in"}
+        serviceUrl={process.env.NEXT_PUBLIC_PORTAL_BACKEND_URL || "https://student-api.mycollege.edu"}
         assistantId="portal-assistant"
         authToken={userToken}
         title="Nemo"
@@ -149,6 +152,7 @@ Add these lines inside your layout's `<head>` or before `</body>`:
 <!-- Optional Global Configuration Override -->
 <script>
   window.NEMO_AI_API_URL = "https://nemo-ai.pydah.edu.in";
+  window.NEMO_AI_SERVICE_URL = "https://student-api.mycollege.edu"; // Dynamic Portal Backend
   window.NEMO_AI_ASSISTANT_ID = "portal-assistant"; // Persona identifier
   window.NEMO_AI_AUTH_TOKEN = "YOUR_USER_BEARER_TOKEN";
 </script>
@@ -267,6 +271,7 @@ export default function RootLayout({ children }) {
         <Script id="nemo-ai-config" strategy="beforeInteractive">
           {`
             window.NEMO_AI_API_URL = "https://nemo-ai.pydah.edu.in";
+            window.NEMO_AI_SERVICE_URL = "https://student-api.mycollege.edu";
             window.NEMO_AI_ASSISTANT_ID = "portal-assistant";
             window.NEMO_AI_TITLE = "Nemo";
             window.NEMO_AI_MODE = "widget";
@@ -303,7 +308,8 @@ export default function RootLayout({ children }) {
 | `title` | `string` | `"Nemo"` | Assistant header title. |
 | `welcomeMessage` | `string` | `"How can I help you today?"` | Welcome heading on empty chat screen. |
 | `position` | `'bottom-right' \| 'bottom-left'` | `'bottom-right'` | Floating button screen position. |
-| `apiBaseUrl` | `string` | `https://nemo-ai.pydah.edu.in` | (Optional override) Manually specifies backend URL. |
+| `apiBaseUrl` | `string` | `https://nemo-ai.pydah.edu.in` | (Optional override) Nemo AI Core Engine URL. |
+| `serviceUrl` | `string` | `null` | **Dynamic Portal Backend URL:** The host portal's own backend API for tool dispatch (e.g. `https://api.mycollege.edu`). |
 
 ---
 
