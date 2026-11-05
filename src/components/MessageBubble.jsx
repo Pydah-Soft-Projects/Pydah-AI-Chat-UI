@@ -7,11 +7,6 @@ export default function MessageBubble({ message, avatarUrl = null }) {
   const isUser = message.role === 'user';
   const botAvatar = avatarUrl || DEFAULT_AVATAR;
   const [copied, setCopied] = useState(false);
-  const isDev = Boolean(
-    (typeof import.meta !== 'undefined' && import.meta.env?.DEV) ||
-    (typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production') ||
-    (typeof window !== 'undefined' && (window.NEMO_AI_SHOW_MODEL === true || window.NEMO_DEV_MODE === true))
-  );
 
   const handleCopy = () => {
     navigator.clipboard.writeText(message.content);
@@ -39,11 +34,6 @@ export default function MessageBubble({ message, avatarUrl = null }) {
         <div className="flex items-center gap-2 mb-1 text-xs text-slate-400 px-1">
           <span className="font-medium text-slate-700">{isUser ? 'You' : 'Nemo'}</span>
           {message.timestamp && <span>• {message.timestamp}</span>}
-          {isDev && message.model && (
-            <span className="hidden sm:inline px-1.5 py-0.2 bg-slate-100 text-slate-500 rounded text-[10px]">
-              {message.model}
-            </span>
-          )}
         </div>
 
         <div className={`relative group p-3.5 sm:p-4 rounded-2xl text-sm leading-relaxed ${
